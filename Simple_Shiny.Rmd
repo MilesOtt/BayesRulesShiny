@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(shiny)
+library(ggplot2)
+library(tidyverse)
 ```
 
 
@@ -128,3 +130,95 @@ shinyApp(ui, server)
 
 
 #Simple Shiny 7
+```{r}
+histogram <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+  df <- data.frame(
+    x = c(x1, x2),
+    g = c(rep("x1", length(x1)), rep("x2", length(x2)))
+  )
+
+  ggplot(df, aes(x, fill = g)) +
+    geom_histogram(binwidth = binwidth) +
+    coord_cartesian(xlim = xlim)
+
+}
+
+
+ui <- fluidPage(
+  fluidRow(column(3,numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 3),
+      numericInput("n", label = "n", value = 1e4, min = 0)
+    ),
+    column(9, plotOutput("hist"))
+  ))
+server <- function(input, output, session) {
+  x1 <- reactive(rpois(input$n, input$lambda1))
+  x2 <- reactive(rpois(input$n, input$lambda2))
+  output$hist <- renderPlot({
+    histogram(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+
+```
+
+#My own shiny app. #Spotify End of Year Statistics 
+
+```{r}
+data<-read_csv('top50.csv')
+
+data<-data %>%
+  mutate(pop = ifelse(str_detect(data$Genre, "pop")|
+                    str_detect(data$Genre,"boy band" )|
+                      str_detect(data$Genre,"escape" )|
+                      str_detect(data$Genre,"big room" ),1, 0),
+         hip_hop=ifelse(str_detect(data$Genre, "hip hop") |
+                      str_detect(data$Genre,"trap" ) |
+                          str_detect(data$Genre,"rap" ),1,0),
+         electro = ifelse(str_detect(data$Genre,"edm")|                                     str_detect(data$Genre,"step" ),1,0),
+        latin = ifelse(str_detect(data$Genre, "latin")|
+                         str_detect(data$Genre,"espanol" ), 1,0),
+        reggae = ifelse(str_detect(data$Genre, "reggae"), 1, 0)) 
+
+#Just gonna use brute force
+data$Genre <- "Blank"
+data$Genre[data$pop==1] <- "Pop"
+data$Genre[data$hip_hop==1] <- "Hip Hop"
+data$Genre[data$electro==1] <- "Electro"
+data$Genre[data$latin==1] <- "Latin"
+data$Genre[data$reggae==1] <- "Reggae"
+
+data<-data %>% 
+  select(-Track.Name, -X1, -Artist.Name, -pop, -hip_hop, -reggae, -latin, -electro)
+  
+```
+
+
+
+```{r}
+
+ui<-fluidPage(
+  titlePanel("Spotify: Top 50 Songs in 2019 Stats"),
+  selectInput("genre", label = "Genres", data$Genre),
+  verbatimTextOutput("summary")
+
+  #tableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$summary <- renderPrint({
+    #We want a summary of the variables
+    data_s <- data[data$Genre == input$genre,]
+    summary(data_s)
+  })
+  #output$table<-renderPrint({
+  #data_t <- data[data$Genre == "input$genre",]
+  #data_t
+  #})
+
+}#specifies the behavior of the app by defining a server function
+shinyApp(ui, server)
+
+
+```
