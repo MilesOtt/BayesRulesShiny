@@ -1,0 +1,12 @@
+name: bayes-rules-shiny
+title:
+username:
+account: tongantopdog
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2479834
+bundleId: 3293802
+url: https://tongantopdog.shinyapps.io/bayes-rules-shiny/
+when: 1592605340.51733
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,12 @@
+name: Ch_1_Quiz
+title: Ch_1_Quiz
+username:
+account: tongantopdog
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2490493
+bundleId: 3303961
+url: https://tongantopdog.shinyapps.io/Ch_1_Quiz/
+when: 1592864563.27679
+asMultiple: FALSE
+asStatic: FALSE
