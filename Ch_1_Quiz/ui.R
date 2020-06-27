@@ -38,6 +38,15 @@ can predict the out- come of a coin flip. To test his claim, you flip a
 
   verbatimTextOutput("null"),
   submitButton("Submit"),
-verbatimTextOutput("answer")
+verbatimTextOutput("answer"),
+mainPanel(
+  br(),
+  br(),
+  br(),
+  br(),
+  p("This application was made by Elaona Lemoto in 
+    supplement to Bayes Rules! by Miles Ott, Mine Dogucu, and ---- . Bayes Rules!
+      is a textbook for undergarduates learning Bayesian statistics. ")
+)
 
 )
