@@ -19,7 +19,7 @@ real and fake, and defined our prior model which is mentioned earlier
 media, we are randomly sampling articles from the our article dataframe 
       with the added weights of our priors.")
   ),
-  sliderInput("num", "Sample Number", value=0, min=10, max=10000),
+  sliderInput("num", "Random Sample Number", value=0, min=1, max=10000),
   mainPanel(
     p("The slider above changes the number of random samples we take 
     given our types of articles and their prior probability. Below is a
