@@ -72,7 +72,7 @@ lot_beta_binomial <- function (alpha,
 server<-function(input, output){
 
 output$plot<-renderPlot({
-  lot_beta_binomial(45, 55, n=input$n,x= input$x, prior=input$prior)
+  lot_beta_binomial(45, 55,n=input$n,x= input$x)
 })
   
 }

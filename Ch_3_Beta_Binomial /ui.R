@@ -12,9 +12,6 @@ ui<-fluidPage(
   sidebarPanel(
     
     sliderInput("nset", "Number of Pollers", value=0, min=1, max=10000),
-    h6("The slider above changes the number of random samples based 
-       on our weights for real and fake articles." 
-    ),
     sliderInput("x", "Pollers in support of Michelle", value=0, min=1, max=10000),
     sliderInput("pi", "Pi", value=0, min=0, max=1),
     style = "position:fixed;width:inherit;"),
@@ -25,8 +22,7 @@ ui<-fluidPage(
       strong("In section 2.2, we learned that Michelle decided to run for presidency
              in the next election and won the Iowa caucus. In recent developments, we 
 learned that she secured her political party's nomination and as campaign manager, want
-to conduct more polls in order to prepare for election season. 
-             party's nomination"),
+to conduct more polls in order to prepare for election season."),
       style = "padding-right: 5%; padding-left: 5%"
       ),
     div(
