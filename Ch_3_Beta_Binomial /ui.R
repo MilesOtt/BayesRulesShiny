@@ -11,9 +11,9 @@ ui<-fluidPage(
   # Sidebar to demonstrate various slider options ----
   sidebarPanel(
     
-    sliderInput("nset", "Number of Pollers", value=0, min=1, max=10000),
+    sliderInput("n", "Number of Pollers", value=0, min=1, max=10000),
     sliderInput("x", "Pollers in support of Michelle", value=0, min=1, max=10000),
-    sliderInput("pi", "Pi", value=0, min=0, max=1),
+    #sliderInput("pi", "Pi", value=0, min=0, max=1),
     style = "position:fixed;width:inherit;"),
   
   
