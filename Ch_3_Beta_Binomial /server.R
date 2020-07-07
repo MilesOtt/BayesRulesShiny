@@ -13,7 +13,12 @@ lot_beta_binomial <- function (alpha,
   
   g <- ggplot(NULL, aes(x = c(0, 1))) +
     labs(x = expression(pi),
-         y = "density") +
+         y = "density",
+         "The Beta Binomial Model of Michelle's Campaign ") +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=16,face="bold"),
+        plot.title = element_text(size=22), 
+        legend.text = element_text(size=16))+
     scale_fill_manual("",
                       
                       values = c(prior = "gold1",
@@ -66,13 +71,24 @@ lot_beta_binomial <- function (alpha,
                                 shape2 = beta_post),
                     geom = "area", alpha = 0.5,
                     aes(fill = "posterior"))
+      
   }
   g
+
 } # end of function`
 server<-function(input, output){
-
-output$plot<-renderPlot({
-  lot_beta_binomial(45, 55,x= input$x,n=input$n)
-})
+  observeEvent(list(input$alpha, input$beta, input$x, input$n),{
+    if (input$x>input$n){
+        shinyjs::disable('x');
+    }else{
+      shinyjs::enable('x')
+      output$plot<-renderPlot({
+        a=as.integer(input$alpha)
+        b=as.integer(input$beta)
+        lot_beta_binomial(a,b,x=input$x,n=input$n)
+      })
+    }
+    
   
+  })
 }

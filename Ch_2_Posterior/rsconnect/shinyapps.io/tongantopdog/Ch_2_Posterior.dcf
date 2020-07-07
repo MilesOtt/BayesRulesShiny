@@ -5,8 +5,8 @@ account: tongantopdog
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2496480
-bundleId: 3344315
+bundleId: 3363047
 url: https://tongantopdog.shinyapps.io/Ch_2_Posterior/
-when: 1593704928.2038
+when: 1594136217.55526
 asMultiple: FALSE
 asStatic: FALSE

@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 
 server<-function(input, output){
+  observeEvent(list(input$p2, input$p1, input$num),{
   output$plot<-renderPlot({
     # Define possible articles
     article <- data.frame(type = c("real", "fake"))
@@ -30,7 +31,7 @@ output$plot2<-renderPlot({
    #Likelihood 
    article_sim <- article_sim %>% 
      mutate(likelihood = 
-              case_when(type == "fake" ~ 0.28,type == "real" ~ 0.02 ))
+              case_when(type == "fake" ~ input$p1,type == "real" ~ input$p2 ))
    #Creting Proportions
    data <- c("no", "yes")
    # Simulate exclamation point usage
@@ -49,12 +50,6 @@ output$plot2<-renderPlot({
            plot.title = element_text(size=22))
    
  })
- 
- 
- 
- 
- 
- 
  output$plot3<-renderPlot({
 
    article <- data.frame(type = c("real", "fake"))
@@ -65,7 +60,7 @@ output$plot2<-renderPlot({
    #Likelihood 
    article_sim <- article_sim %>% 
      mutate(likelihood = 
-              case_when(type == "fake" ~ 0.28,type == "real" ~ 0.02 ))
+              case_when(type == "fake" ~ input$p1,type == "real" ~ input$p2 ))
    #Creting Proportions
   
    
@@ -87,6 +82,6 @@ output$plot2<-renderPlot({
            plot.title = element_text(size=22))
  })
 
-  
+  })
   
 }
