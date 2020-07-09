@@ -14,11 +14,11 @@ ui<-fluidPage(
        on our weights for real and fake articles." 
     ),
     numericInput("p1", "f(0.2) = ", value=0.1,min=0,max=1), 
-    numericInput("p2", "f(0.6) = ",value=0.25, min=0,max=1), 
+    numericInput("p2", "f(0.5) = ",value=0.25, min=0,max=1), 
     numericInput("p3", "f(0.8) = ", value=0.65, min=0,max=1), 
     h6("The numeric inputs above can change the prior weights for each value of pi. 
        These inputs range from 0 to 1 and MUST add up to 1. "),
-    sliderInput("range", "Number of Won Games", min=0, max=6, value=c(0,6)),
+    sliderInput("range", "Number of Won Games", min=0, max=6, value=0),
     h6("Change the slider above to change the posterior distribution given the number of games 
        Kasparov won."),
     submitButton("Submit"), 
@@ -81,7 +81,9 @@ prior weights, what can you tell about pi and the simulated match outcomes, x? "
     br(),
     br(),
     br(),
+    div(
     p("This application was made by Elaona Lemoto in 
       supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-      is a textbook for undergarduates learning Bayesian statistics. "))
+      is a textbook for undergarduates learning Bayesian statistics. "),
+    style="padding-right: 5%; padding-left: 5%"))
   )
