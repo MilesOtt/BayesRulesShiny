@@ -13,13 +13,15 @@ ui<-fluidPage(
    
   sliderInput("num", "Number of Random Samples", value=5000, min=1, max=10000),
   
-  "Below, you can alter the prior probabilities for articles that have an exclamation mark
-     in their title. Again, the default prior probabilities for articles that are fake and that have an
-     exclamation mark is 28% and 2% for real articles. Therefore, the values need to remain 
-     between 0 and 1. Don't forget that these values do not include the probabilities for articles 
-     without exclamation points in their titles.",
-  numericInput("p1", "P(Fake Articles w/ Exclamation Marks) ", value=0.28,min=0,max=1), 
-  numericInput("p2", "P(Real Articles w/ Exclamation Marks) ",value=0.02, min=0,max=1), 
+  "Below, you can alter the prior probabilities for type of articles that have an exclamation point
+     in their title. Again, the default prior probabilities as they are in the book for articles that are fake and that have an
+     exclamation point is 28% and 2% of real news articles use exclamation points. Therefore, the values need to remain 
+     between 0 and 1.",
+  #Change wroding to reference book -  We're using the example from the book.
+  
+  
+  numericInput("p1", "P(Exclamation Point | Fake Article ) ", value=0.28,min=0,max=1), 
+  numericInput("p2", "P(Exclamation Point | Real Article ) ",value=0.02, min=0,max=1), 
   submitButton("Submit"),
 style = "position:fixed;width:inherit;"
 ),
@@ -39,6 +41,8 @@ interested in distinguishing fake news articles from real news articles.
          their weighted probabilities. Throughout this exercise, you will look
              at the different distributions and below as you change the number
              or random samples "),
+      #We're going to keep the prior probabilities fixed 
+      #This is what we observed in the data
       style = "padding-right: 5%; padding-left: 5%"
       ),
     br(),
@@ -54,11 +58,20 @@ is similar to the the
       plotOutput('plot'),
       style = "padding-right: 10%; padding-left: 10%"),
     div(
+      #What is the likelihood of exclamation point given fake news articles and 
+      #what is the prob, of the vice versa 
+      
       p("Now in our analysis of real and fake articles, we created a likelihood 
-      variable tying together exclamation usage and an articles chance of being 
-        real or fake. In this case, we defined any article with an exclamation mark 
-        to have a 28% chance of being fake and 2% chance of being real. You can alter these 
-      prior probabilities in the side panel to see how the likelihood distribution and the posterior distribution would alter."),
+      variable tying together exclamation point usage and types of articles.
+As our default inputs, we are using the data on exclmation points and types of
+articles that we gathered earlier in Chapter 2. Recall that we found a 
+28% chance of an articles title having an exclamtion point given it's fake
+and a 2% chance of having an exclamation point given it's a real article.
+To see how the likelihood distribution 
+        and the posterior distribution would alter with different data,
+change the probabilities in the right column. In this case, what is the likelihood
+        of an exclamation point given fake news article and what is the likelihood
+        of an article title using an exclamation point given it's a real news article?"),
       style = "padding-right: 5%; padding-left: 5%"),
   div(
         plotOutput('plot2'),
@@ -66,7 +79,7 @@ is similar to the the
       ),
   div(
     p("Finally, we have our posterior distribution. The graph below shows the proportion of 
-      real and fake articles with exclamation usage and it seems as thought Based on our prior probabilities, the 
+      real and fake articles with exclamation point usage. Based on the data we input, the 
       posterior distribution as shown in the graph below will change. "),
     style = "padding-right: 5%; padding-left: 5%"),
   div(

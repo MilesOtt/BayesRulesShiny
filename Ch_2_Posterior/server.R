@@ -2,6 +2,23 @@ library(shiny)
 library(tidyverse)
 
 server<-function(input, output){
+  
+  data_1<-reactive({
+    validate(
+      need(input$p1<=1, "Make sure your inputs are less than 1!")
+    )
+    input$p1
+    
+  })
+  
+  data_2<-reactive({
+    validate(
+      need(input$p2<=1, "Make sure your inputs are less than 1!")
+    )
+    input$p2
+    
+  })
+  
   observeEvent(list(input$p2, input$p1, input$num),{
   output$plot<-renderPlot({
     # Define possible articles
@@ -31,7 +48,7 @@ output$plot2<-renderPlot({
    #Likelihood 
    article_sim <- article_sim %>% 
      mutate(likelihood = 
-              case_when(type == "fake" ~ input$p1,type == "real" ~ input$p2 ))
+              case_when(type == "fake" ~ data_1(),type == "real" ~ data_2() ))
    #Creting Proportions
    data <- c("no", "yes")
    # Simulate exclamation point usage
@@ -60,7 +77,7 @@ output$plot2<-renderPlot({
    #Likelihood 
    article_sim <- article_sim %>% 
      mutate(likelihood = 
-              case_when(type == "fake" ~ input$p1,type == "real" ~ input$p2 ))
+              case_when(type == "fake" ~  data_1(),type == "real" ~ data_2() ))
    #Creting Proportions
   
    
