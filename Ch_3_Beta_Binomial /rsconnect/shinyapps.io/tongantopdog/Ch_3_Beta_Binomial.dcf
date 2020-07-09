@@ -5,8 +5,8 @@ account: tongantopdog
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2530213
-bundleId: 3363439
+bundleId: 3372173
 url: https://tongantopdog.shinyapps.io/Ch_3_Beta_Binomial/
-when: 1594142490.5558
+when: 1594306048.26002
 asMultiple: FALSE
 asStatic: FALSE
