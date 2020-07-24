@@ -70,7 +70,7 @@ server<-function(input, output){
   observeEvent(list(input$alpha, input$beta, input$x, input$n, input$mean, input$mode),{
     a=as.integer(input$alpha)
     b=as.integer(input$beta)
-    output$plot<-renderPlot({
+    output$plot_beta<-renderPlot({
     plot_beta(a,b, input$mean, input$mode)
     })
 

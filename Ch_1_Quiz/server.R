@@ -1,4 +1,334 @@
 library(shiny)
+library(tidyverse)
+library(shinyjs)
+
+plot_beta <- function(alpha, beta, mean = FALSE, mode = FALSE){
+  
+  
+  p <- ggplot(data = data.frame(x = c(0, 1)),
+              aes(x)) +
+    stat_function(fun = dbeta,
+                  n = 101,
+                  args = list(shape1 = alpha,
+                              shape2=beta)) +
+    labs(x = expression(pi),
+         y = expression(paste("f(",pi,")")))+
+    
+    theme(axis.text=element_text(size=14),
+          axis.title=element_text(size=14
+                                  ,face="bold"),
+          plot.title = element_text(size=22))
+  
+  
+  if (mean == TRUE & mode == FALSE){
+    mean <- alpha / (alpha + beta)
+    
+    p <- p +
+      geom_segment(aes(x = mean, y = 0, 
+                       xend = mean, 
+                       yend = dbeta(mean, alpha, beta),
+                       linetype = "mean")) +
+      scale_linetype_manual(values = c(mean = "solid")) +
+      theme(legend.title = element_blank())
+  }
+  
+  if (mean == FALSE & mode == TRUE){
+    mode <- (alpha - 1)/(alpha + beta - 2)
+    
+    p <- p +
+      geom_segment(aes(x = mode, y = 0, 
+                       xend = mode, 
+                       yend = dbeta(mode, alpha, beta), 
+                       linetype = "mode"))+
+      scale_linetype_manual(values = c(mode = "dashed")) +
+      theme(legend.title = element_blank())
+    
+    
+  }
+  
+  if (mean == TRUE & mode == TRUE){
+    mean <- alpha / (alpha + beta)
+    mode <- (alpha - 1)/(alpha + beta - 2)
+    
+    
+    p <- p +
+      geom_segment(aes(x = mean, y = 0, 
+                       xend = mean, 
+                       yend = dbeta(mean, alpha, beta),
+                       linetype = "mean")) +
+      geom_segment(aes(x = mode, y = 0, 
+                       xend = mode, 
+                       yend = dbeta(mode, alpha, beta), 
+                       linetype = "mode"))+
+      scale_linetype_manual(values = c(mean = "solid", mode = "dashed")) +
+      theme(legend.title = element_blank())
+  }
+  p
+}
+
+plot_beta_binomial <- function (alpha,
+                                beta,
+                                x = NULL,
+                                n = NULL,
+                                prior = TRUE,
+                                likelihood = TRUE,
+                                posterior = TRUE){
+  if (is.null(x) | is.null(n))
+    warning("To visualize the posterior,
+            specify data x and n")
+  #MORE GRAPHING
+  
+  g <- ggplot(NULL, aes(x = c(0, 1))) +
+    labs(x = expression(pi),
+         y = "density",
+         "The Beta Binomial Model of Michelle's Campaign ") +
+    theme(axis.text=element_text(size=16),
+          axis.title=element_text(size=16,face="bold"),
+          plot.title = element_text(size=22), 
+          legend.text = element_text(size=16))+
+    scale_fill_manual("",
+                      
+                      values = c(prior = "gold1",
+                                 
+                                 likelihood = "cyan2",
+                                 posterior = "cyan4"),
+                      breaks = c("prior",
+                                 "(scaled) likelihood",
+                                 "posterior"))
+  #GRAPH 
+  if (prior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "prior"))
+  }
+  
+  #
+  
+  if (!is.null(x) & !is.null(n)) {
+    alpha_post <- alpha + x
+    beta_post <- beta + n - x
+    x_data <- x
+    like_scaled <- function(x) {
+      like_fun <- function(x) {
+        dbinom(x = x_data, size = n, prob = x)
+      }
+      scale_c <- integrate(like_fun, lower = 0, upper = 1)[[1]]
+      like_fun(x)/scale_c
+    }
+  }
+  
+  #GRAPHING
+  if (!is.null(x) & !is.null(n) & (likelihood != FALSE)) {
+    g <- g +
+      stat_function(fun = like_scaled) +
+      stat_function(fun = like_scaled,
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "(scaled) likelihood"))
+  }
+  #GRAPHHIN
+  if (!is.null(x) & !is.null(n) & posterior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post),
+                    geom = "area", alpha = 0.5,
+                    aes(fill = "posterior"))
+    
+  }
+  g
+  
+} # end of function`
+
+
+
+plot_beta_binomial_day2 <- function (alpha,
+                                beta,
+                                x = NULL,
+                                n = NULL,
+                                prior = TRUE,
+                                likelihood = TRUE,
+                                posterior = TRUE){
+  if (is.null(x) | is.null(n))
+    warning("To visualize the posterior,
+            specify data x and n")
+  #MORE GRAPHING
+  
+  g <- ggplot(NULL, aes(x = c(0, 1))) +
+    labs(x = expression(pi),
+         y = "density",
+         "The Beta Binomial Model of Michelle's Campaign ") +
+    theme(axis.text=element_text(size=16),
+          axis.title=element_text(size=16,face="bold"),
+          plot.title = element_text(size=22), 
+          legend.text = element_text(size=16))+
+    scale_fill_manual("",
+                      
+                      values = c(prior = "gold1",
+                                 
+                                 likelihood = "cyan2",
+                                 posterior = "cyan4"),
+                      breaks = c("prior",
+                                 "(scaled) likelihood",
+                                 "posterior"), 
+                      labels=c("prior (posterior: day1)", 
+                               "(scaled) likelihood", 
+                               "posterior: day 2"))
+  #GRAPH 
+  if (prior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "prior"))
+  }
+  
+  #
+  
+  if (!is.null(x) & !is.null(n)) {
+    alpha_post <- alpha + x
+    beta_post <- beta + n - x
+    x_data <- x
+    like_scaled <- function(x) {
+      like_fun <- function(x) {
+        dbinom(x = x_data, size = n, prob = x)
+      }
+      scale_c <- integrate(like_fun, lower = 0, upper = 1)[[1]]
+      like_fun(x)/scale_c
+    }
+  }
+  
+  #GRAPHING
+  if (!is.null(x) & !is.null(n) & (likelihood != FALSE)) {
+    g <- g +
+      stat_function(fun = like_scaled) +
+      stat_function(fun = like_scaled,
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "(scaled) likelihood"))
+  }
+  #GRAPHHIN
+  if (!is.null(x) & !is.null(n) & posterior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post),
+                    geom = "area", alpha = 0.5,
+                    aes(fill = "posterior"))
+    
+  }
+  g
+  
+} # end of function`
+
+
+plot_beta_binomial_day3 <- function (alpha,
+                                     beta,
+                                     x = NULL,
+                                     n = NULL,
+                                     prior = TRUE,
+                                     likelihood = TRUE,
+                                     posterior = TRUE){
+  if (is.null(x) | is.null(n))
+    warning("To visualize the posterior,
+            specify data x and n")
+  #MORE GRAPHING
+  
+  g <- ggplot(NULL, aes(x = c(0, 1))) +
+    labs(x = expression(pi),
+         y = "density",
+         "The Beta Binomial Model of Michelle's Campaign ") +
+    theme(axis.text=element_text(size=16),
+          axis.title=element_text(size=16,face="bold"),
+          plot.title = element_text(size=22), 
+          legend.text = element_text(size=16))+
+    scale_fill_manual("",
+                      
+                      values = c(prior = "gold1",
+                                 
+                                 likelihood = "cyan2",
+                                 posterior = "cyan4"),
+                      breaks = c("prior",
+                                 "(scaled) likelihood",
+                                 "posterior"),
+                      
+                      labels=c("prior (posterior: day2)", 
+                               "(scaled) likelihood", 
+                               "posterior: day 3"))
+  #GRAPH 
+  if (prior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "prior"))
+  }
+  
+  #
+  
+  if (!is.null(x) & !is.null(n)) {
+    alpha_post <- alpha + x
+    beta_post <- beta + n - x
+    x_data <- x
+    like_scaled <- function(x) {
+      like_fun <- function(x) {
+        dbinom(x = x_data, size = n, prob = x)
+      }
+      scale_c <- integrate(like_fun, lower = 0, upper = 1)[[1]]
+      like_fun(x)/scale_c
+    }
+  }
+  
+  #GRAPHING
+  if (!is.null(x) & !is.null(n) & (likelihood != FALSE)) {
+    g <- g +
+      stat_function(fun = like_scaled) +
+      stat_function(fun = like_scaled,
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "(scaled) likelihood"))
+  }
+  #GRAPHHIN
+  if (!is.null(x) & !is.null(n) & posterior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post),
+                    geom = "area", alpha = 0.5,
+                    aes(fill = "posterior"))
+    
+    
+  }
+  g
+  
+} # end of function`
+
 
 server<-function(input, output, session) {
  output$answer<-renderPrint({ 
@@ -19,30 +349,34 @@ server<-function(input, output, session) {
       "You don't take sides; you shared ideas from frequentists and Bayesians";
     }
     })
+
+ 
+ #CHAPTER 2 POSTERIOR SIMULATION
+
  data_1<-reactive({
    validate(
-     need(input$p1<=1, "Make sure your inputs are less than 1!")
+     need(input$c2p1<=1, "Make sure your inputs are less than 1!")
    )
-   input$p1
-   
+   input$c2p1
+
  })
- 
+
  data_2<-reactive({
    validate(
-     need(input$p2<=1, "Make sure your inputs are less than 1!")
+     need(input$c2p2<=1, "Make sure your inputs are less than 1!")
    )
-   input$p2
-   
+   input$c2p2
+
  })
- 
- observeEvent(list(input$p2, input$p1, input$num),{
+
+ observeEvent(list(input$c2p2, input$c2p1, input$c2num),{
    output$plot<-renderPlot({
      # Define possible articles
      article <- data.frame(type = c("real", "fake"))
      # Define the prior model
      prior <- c(0.6, 0.4)
      article_sim <- sample_n(article,
-                             size = input$num,weight = prior, replace = TRUE)
+                             size = input$c2num,weight = prior, replace = TRUE)
      #First Plot
      ggplot(article_sim, aes(x=type))+
        geom_bar()+
@@ -52,18 +386,16 @@ server<-function(input, output, session) {
                                      ,face="bold"),
              plot.title = element_text(size=22))
    })
-   
-   
-   
-   output$plot2<-renderPlot({
+
+output$plot2<-renderPlot({
      article <- data.frame(type = c("real", "fake"))
      # Define the prior model
      prior <- c(0.6, 0.4)
      article_sim <- sample_n(article,
-                             size = input$num,weight = prior, replace = TRUE)
-     #Likelihood 
-     article_sim <- article_sim %>% 
-       mutate(likelihood = 
+                             size = input$c2num,weight = prior, replace = TRUE)
+     #Likelihood
+     article_sim <- article_sim %>%
+       mutate(likelihood =
                 case_when(type == "fake" ~ data_1(),type == "real" ~ data_2() ))
      #Creting Proportions
      data <- c("no", "yes")
@@ -72,8 +404,8 @@ server<-function(input, output, session) {
      article_sim <- article_sim %>%
        group_by(1:n()) %>%
        mutate(usage = sample(data, size = 1,
-                             prob = c(1 - likelihood, likelihood))) 
-     
+                             prob = c(1 - likelihood, likelihood)))
+
      ggplot(article_sim, aes(x = usage)) + geom_bar() +
        facet_wrap(~ type)    +
        labs(title = "Likelihood Distribution", x="Usage", y="Count")+
@@ -81,31 +413,31 @@ server<-function(input, output, session) {
              axis.title=element_text(size=14
                                      ,face="bold"),
              plot.title = element_text(size=22))
-     
+
    })
    output$plot3<-renderPlot({
-     
+
      article <- data.frame(type = c("real", "fake"))
      # Define the prior model
      prior <- c(0.6, 0.4)
      article_sim <- sample_n(article,
-                             size = input$num,weight = prior, replace = TRUE)
-     #Likelihood 
-     article_sim <- article_sim %>% 
-       mutate(likelihood = 
+                             size = input$c2num,weight = prior, replace = TRUE)
+     #Likelihood
+     article_sim <- article_sim %>%
+       mutate(likelihood =
                 case_when(type == "fake" ~  data_1(),type == "real" ~ data_2() ))
      #Creting Proportions
-     
-     
+
+
      data <- c("no", "yes")
      set.seed(3)
      article_sim <- article_sim %>%
        group_by(1:n()) %>%
        mutate(usage = sample(data, size = 1,
-                             prob = c(1 - likelihood, likelihood))) 
-     
-     
-     ggplot(article_sim, aes(x = type)) + 
+                             prob = c(1 - likelihood, likelihood)))
+
+
+     ggplot(article_sim, aes(x = type)) +
        geom_bar() +
        facet_wrap(~ usage)+
        labs(title = "Posterior Distribution", x="Type", y="Count")+
@@ -114,7 +446,71 @@ server<-function(input, output, session) {
                                      ,face="bold"),
              plot.title = element_text(size=22))
    })
-   
+
  })
 
+ #Chapter 3 Beta Model
+
+   observeEvent(list(input$alpha, input$beta, input$x, input$n, input$mean, input$mode),{
+     a=as.integer(input$alpha)
+     b=as.integer(input$beta)
+
+
+     output$plot_b<-renderPlot({
+       plot_beta(a,b, input$mean, input$mode)
+     })
+
+   })
+
+   #Chapter 3 Beta Binomial Model
+
+   observeEvent(list(input$c3alpha, input$c3beta, input$c3x, input$c3n),{
+     if (input$c3x>input$c3n){
+       shinyjs::disable('c3x');
+     }else{
+       shinyjs::enable('c3x')
+       output$plot_bb<-renderPlot({
+         c3a=as.integer(input$c3alpha)
+         c3b=as.integer(input$c3beta)
+         plot_beta_binomial(c3a,c3b,x=input$c3x,n=input$c3n)
+       })
+     }
+     
+     #Chapter 4 Sequential Bayesian Analysis
+     
+     observeEvent(list(input$ch4_alpha, input$ch4_beta, input$ch4_x1, input$ch4_n1,
+                       input$ch4_x2 ,input$ch4_n2,input$ch4_x3, input$ch4_n3),{
+                         
+       output$plot_ch41<-renderPlot({
+       ch4_alpha=as.integer(input$ch4_alpha)
+       ch4_beta=as.integer(input$ch4_beta)
+       plot_beta_binomial(ch4_alpha, ch4_beta, input$ch4_x1, input$ch4_n1)
+       })
+       
+       output$plot_ch42<-renderPlot({
+         ch4_alpha=as.integer(input$ch4_alpha)
+         ch4_beta=as.integer(input$ch4_beta)
+         alpha_prior <- ch4_alpha + input$ch4_x1
+         beta_prior <- ch4_beta + input$ch4_n1 - input$ch4_x1
+         plot_beta_binomial_day2(alpha_prior, beta_prior, input$ch4_x2, input$ch4_n2)
+       })
+       output$plot_ch43<-renderPlot({
+         ch4_alpha=as.integer(input$ch4_alpha)
+         ch4_beta=as.integer(input$ch4_beta)
+         alpha_prior <- ch4_alpha + input$ch4_x1
+         beta_prior <- ch4_beta + input$ch4_n1 - input$ch4_x1
+         alpha_prior2 <- alpha_prior + input$ch4_x2
+         beta_prior2 <- beta_prior + input$ch4_n2 - input$ch4_x2
+         plot_beta_binomial_day3(alpha_prior2, beta_prior2, input$ch4_x3, input$ch4_n3)
+       })
+       })
+
+})
+
 }
+
+
+
+
+
+

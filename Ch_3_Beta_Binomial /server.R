@@ -1,6 +1,6 @@
 library(shiny)
 library(tidyverse)
-lot_beta_binomial <- function (alpha,
+plot_beta_binomial <- function (alpha,
                                beta,
                                x = NULL,
                                n = NULL,
