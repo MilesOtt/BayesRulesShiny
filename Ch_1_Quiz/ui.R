@@ -317,8 +317,8 @@ tabPanel("Chapter 4: Balancing Bayesian Models",
          sidebarPanel(
            "Below, choose a sample size and an alpha and beta value.",
            radioButtons("balance_samplen", "Sample Size", choices=c(5, 10, 15, 20, 100)),
-           sliderInput("balance_alpha", "Alpha", value=14, min=1, max=100),
-           sliderInput("balance_beta", "Beta", value=1, min=1, max=100), 
+           sliderInput("balance_alpha", "Alpha", value=14, min=0, max=100),
+           sliderInput("balance_beta", "Beta", value=1, min=0, max=100), 
            submitButton("Submit")
            
          ),
