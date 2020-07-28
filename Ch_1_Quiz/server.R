@@ -649,7 +649,7 @@ output$plot2<-renderPlot({
        output$balance_bayesian<-renderPlot({
          sample_n=as.integer(input$balance_samplen)
          x=0.6*sample_n
-         plot_beta_binomial(input$balance_alpha, input$balance_beta, sample_n, x)
+         plot_beta_binomial(input$balance_alpha, input$balance_beta, x, sample_n)
        })
        
        
