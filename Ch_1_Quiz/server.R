@@ -641,6 +641,8 @@ output$plot2<-renderPlot({
          plot_beta_binomial_day3(alpha_prior2, beta_prior2, warn_ch4p1_day3(), warn_ch4p2_day3())
        })
        })
+     
+  
      #Chapter 5: Gamma-Poisson
      
      observeEvent(list(input$gamma_alpha,input$gamma_beta, input$poi_n, input$poi_xn),{
@@ -652,6 +654,16 @@ output$plot2<-renderPlot({
          plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn)
        })
      })
+     
+     #Chapter 5: Normal-Normal
+     
+     observeEvent(list(input$normal_mean, input$normal_sd, input$normal_samplesize, 
+                       input$normal_samplemean),{
+          output$normal_normal<-renderPlot({
+            mean<-as.integer(input$normal_sd)
+            sd<-as.integer(input$normal_sd)
+          })
+                       })
 
 })
 

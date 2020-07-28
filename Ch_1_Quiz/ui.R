@@ -233,8 +233,15 @@ tabPanel("Chapter 3: Beta Binomial Model",
              p("This application was made by Elaona Lemoto in
                supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
                is a textbook for undergarduates learning Bayesian statistics. "),
+             style = "padding-right: 5%; padding-left: 5%"),
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. "),
              style = "padding-right: 5%; padding-left: 5%")
-           )),
+         )),
 
 #Chapter 4: Sequential Bayesian Analysis
 
@@ -292,7 +299,13 @@ question. Below is our first graph showing our beta binomial model. Play around 
            style = "padding-right: 10%; padding-left: 10%")
              )
          ),
-tabPanel("Chapter 4: Balencing Bayesian Models"),
+
+#Chapter 4: Balancing Bayesian Models
+
+tabPanel("Chapter 4: Balancing Bayesian Models"),
+
+#Chapter 5: Gamma-Poisson
+
 tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
          titlePanel(
            h1("Chapter 5: The Gamma-Poisson Model")
@@ -306,16 +319,12 @@ tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
            "After choosing values above, we now need a sample size and the sum of our observed x's.",
            sliderInput("poi_n", "Number of Samples", value=4, min=1, max=10), 
            sliderInput("poi_xn", "Sum of our xi's", value=11, min=1, max=100),
-           submitButton("Submit")
-           
-           
-           
-         ),
+           submitButton("Submit")),
          mainPanel(
            "In Chapter 5.2, we talk about the Gamma-Poisson Conjugacy Family. If you
            recall, this conjugate family has a lambda parameter that uses a Gamma prior
            and a Poisson likelihood. In other words, the posterior distribution for 
-           this conjugate has hyper parameters depending on the prior and the likelihood. 
+           this conjugate has hyperparameters depending on the prior and the likelihood. 
            Since the Gamma-Poisson requires a Gamma prior and Poisson likelihood, use the 
 inputs to your left to play around with the model.
 For default, we are using values
@@ -324,9 +333,58 @@ For default, we are using values
            div(
              plotOutput("gamma_poisson"),
              style = "padding-right: 10%; padding-left: 10%"
-           )
-         )),
-tabPanel("Chapter 5: Introduction to the Normal Normal Model")
+           ),
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. "),
+             style = "padding-right: 5%; padding-left: 5%"))),
+
+#Chapter 5: Normal Normal
+
+tabPanel("Chapter 5: Introduction to the Normal-Normal Model",
+         titlePanel( 
+           h1("Chapter 5: The Normal-Normal Conjugate Family")
+         ),
+         sidebarPanel(
+           "Choose a mean and a standard deviation below for our Normal prior.",
+           radioButtons("normal_mean", "Normal Mean", choices=c(3.25,2, 3)), 
+           radioButtons("normal_sd", "Normal Standard Deviation", choices=c(.25, 1, 4)),
+           
+           "Now that you've chosen values for our Normal prior, we need to choose values for
+           our Normal likelihood. In this case, we need a sample mean and a sample size.",
+           sliderInput("normal_samplemean", "Normal Sample Mean", value = 3, min=1, max=50),
+           sliderInput("normal_samplesize","Normal Sample Size", value = 50,min=2, max=100),
+           submitButton("Submit")
+ ),
+         mainPanel(
+           "Last section, we were introduced to the idea of conjugate families.
+           In Chapter 5.3 and in this exercise, we are extending our understanding 
+of these types of families by learning more about the 
+           Normal-Normal model. If you recall, a conjugate family
+           is a model where the posterior distribution has hyperparamters that 
+           depend on both the prior and the Likelihood. In this case, the Normal-Normal falls into
+           that category seeing as though our posterior distribution for mew will be normal with
+           the hyperparamters for the mean and standard deviation dependent on our values for our prior
+           and likelihood. Like our last exercise, change the inputs for our Normal prior and our Normal
+           likelihood to see how it alters our distribution. As default, we are using values from our
+           in-text example of volume of hippocampus in the brain from 50 different collegiate American
+           football players.",
+           div(
+             plotOutput("normal-normal"),
+             style = "padding-right: 10%; padding-left: 10%"
+             ),
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. "),
+             style = "padding-right: 5%; padding-left: 5%")
+           
+         ))
 )#navbarMenu end
 )#navbarPage end
 )#end of fluid page
