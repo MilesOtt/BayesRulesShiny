@@ -93,8 +93,13 @@ plot_beta_binomial <- function (alpha,
                                  likelihood = "cyan2",
                                  posterior = "cyan4"),
                       breaks = c("prior",
-                                 "(scaled) likelihood",
-                                 "posterior"))
+                                 "likelihood",
+                                 "posterior"),
+                      labels=c(
+                        "prior",
+                        "(scaled) likelihood", 
+                        "posterior"
+                      ))
   #GRAPH 
   if (prior == TRUE) {
     g <- g +
@@ -131,7 +136,7 @@ plot_beta_binomial <- function (alpha,
       stat_function(fun = like_scaled,
                     geom = "area",
                     alpha = 0.5,
-                    aes(fill = "(scaled) likelihood"))
+                    aes(fill = "likelihood"))
   }
   #GRAPHHIN
   if (!is.null(x) & !is.null(n) & posterior == TRUE) {
@@ -153,12 +158,13 @@ plot_beta_binomial <- function (alpha,
 
 
 plot_beta_binomial_day2 <- function (alpha,
-                                beta,
-                                x = NULL,
-                                n = NULL,
-                                prior = TRUE,
-                                likelihood = TRUE,
-                                posterior = TRUE){
+                                     beta,
+                                     x = NULL,
+                                     n = NULL,
+                                     prior = TRUE,
+                                     likelihood = TRUE,
+                                     posterior = TRUE,
+                                     title_name=TRUE){
   if (is.null(x) | is.null(n))
     warning("To visualize the posterior,
             specify data x and n")
@@ -179,8 +185,9 @@ plot_beta_binomial_day2 <- function (alpha,
                                  likelihood = "cyan2",
                                  posterior = "cyan4"),
                       breaks = c("prior",
-                                 "(scaled) likelihood",
-                                 "posterior"), 
+                                 "likelihood",
+                                 "posterior"),
+                      
                       labels=c("prior (posterior: day1)", 
                                "(scaled) likelihood", 
                                "posterior: day 2"))
@@ -220,7 +227,7 @@ plot_beta_binomial_day2 <- function (alpha,
       stat_function(fun = like_scaled,
                     geom = "area",
                     alpha = 0.5,
-                    aes(fill = "(scaled) likelihood"))
+                    aes(fill = "likelihood"))
   }
   #GRAPHHIN
   if (!is.null(x) & !is.null(n) & posterior == TRUE) {
@@ -234,10 +241,18 @@ plot_beta_binomial_day2 <- function (alpha,
                     geom = "area", alpha = 0.5,
                     aes(fill = "posterior"))
     
+    
+  }
+  if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
+    x="title_name"
+    g <- g +
+      labs(title = x)
+    
+    
   }
   g
   
-} # end of function`
+}# end of function`
 
 
 plot_beta_binomial_day3 <- function (alpha,
@@ -267,7 +282,7 @@ plot_beta_binomial_day3 <- function (alpha,
                                  likelihood = "cyan2",
                                  posterior = "cyan4"),
                       breaks = c("prior",
-                                 "(scaled) likelihood",
+                                 "likelihood",
                                  "posterior"),
                       
                       labels=c("prior (posterior: day2)", 
@@ -309,7 +324,7 @@ plot_beta_binomial_day3 <- function (alpha,
       stat_function(fun = like_scaled,
                     geom = "area",
                     alpha = 0.5,
-                    aes(fill = "(scaled) likelihood"))
+                    aes(fill = "likelihood"))
   }
   #GRAPHHIN
   if (!is.null(x) & !is.null(n) & posterior == TRUE) {
@@ -481,10 +496,56 @@ output$plot2<-renderPlot({
      observeEvent(list(input$ch4_alpha, input$ch4_beta, input$ch4_x1, input$ch4_n1,
                        input$ch4_x2 ,input$ch4_n2,input$ch4_x3, input$ch4_n3),{
                          
+                         warn_ch4p1<-reactive({
+                           validate(
+                             need(input$ch4_x1<=input$ch4_n1, "Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_x1)
+                           
+                         })
+                         
+                         warn_ch4p2<-reactive({
+                           validate(
+                             need(input$ch4_x1<=input$ch4_n1, "Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_n1)
+                           
+                         })
+                         
+                         warn_ch4p1_day2<-reactive({
+                           validate(
+                             need(input$ch4_x2<=input$ch4_n2 ,"Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_x2)
+                           
+                         })
+                         
+                         warn_ch4p2_day2<-reactive({
+                           validate(
+                             need(input$ch4_x2<=input$ch4_n2, "Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_n2)
+                           
+                         })
+                         warn_ch4p1_day3<-reactive({
+                           validate(
+                             need(input$ch4_x3<=input$ch4_n3, "Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_x3)
+                           
+                         })
+                         
+                         warn_ch4p2_day3<-reactive({
+                           validate(
+                             need(input$ch4_x3<=input$ch4_n3, "Make sure number of successes is less than or equal to the number of trials!")
+                           )
+                           return(input$ch4_n3)
+                           
+                         })
        output$plot_ch41<-renderPlot({
        ch4_alpha=as.integer(input$ch4_alpha)
        ch4_beta=as.integer(input$ch4_beta)
-       plot_beta_binomial(ch4_alpha, ch4_beta, input$ch4_x1, input$ch4_n1)
+       plot_beta_binomial(ch4_alpha, ch4_beta, warn_ch4p1(), warn_ch4p2())
        })
        
        output$plot_ch42<-renderPlot({
@@ -492,7 +553,7 @@ output$plot2<-renderPlot({
          ch4_beta=as.integer(input$ch4_beta)
          alpha_prior <- ch4_alpha + input$ch4_x1
          beta_prior <- ch4_beta + input$ch4_n1 - input$ch4_x1
-         plot_beta_binomial_day2(alpha_prior, beta_prior, input$ch4_x2, input$ch4_n2)
+         plot_beta_binomial_day2(alpha_prior, beta_prior, warn_ch4p1_day2(), warn_ch4p2_day2())
        })
        output$plot_ch43<-renderPlot({
          ch4_alpha=as.integer(input$ch4_alpha)
@@ -501,7 +562,7 @@ output$plot2<-renderPlot({
          beta_prior <- ch4_beta + input$ch4_n1 - input$ch4_x1
          alpha_prior2 <- alpha_prior + input$ch4_x2
          beta_prior2 <- beta_prior + input$ch4_n2 - input$ch4_x2
-         plot_beta_binomial_day3(alpha_prior2, beta_prior2, input$ch4_x3, input$ch4_n3)
+         plot_beta_binomial_day3(alpha_prior2, beta_prior2, warn_ch4p1_day3(), warn_ch4p2_day3())
        })
        })
 

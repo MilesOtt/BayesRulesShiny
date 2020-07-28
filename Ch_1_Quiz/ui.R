@@ -235,30 +235,61 @@ tabPanel("Chapter 3: Beta Binomial Model",
                is a textbook for undergarduates learning Bayesian statistics. "),
              style = "padding-right: 5%; padding-left: 5%")
            )),
+
+#Chapter 4: Sequential Bayesian Analysis
+
+
 tabPanel("Chapter 4: Sequential Bayesian Analysis",
          titlePanel(
-           h6("Chapter 4: Sequential Bayesian Analysis")
+           h1("Chapter 4: Sequential Bayesian Analysis")
          ),
            sidebarPanel(
+             "Here you can change the inputs for the models to our right. Let's start by choosing an alpha
+             and beta value for our first beta binomial model. Along with choosing the alpha and beta 
+             values for the fist model, choose a number of trials and successes. ",
              radioButtons("ch4_alpha", "Alpha", choices=c(1, 2,10 )),
              radioButtons("ch4_beta", "Beta", choices=c(1,2,10)),
              sliderInput("ch4_x1", "Number of Successes for Day 1", value=5, min=1, max=10),
              sliderInput("ch4_n1", "Number of Trials for Day 1", value=6, min=1, max=10),
+             
+             "For day 2, choose a new number of trials and successes to
+             show our updated beta binomial model.",
              sliderInput("ch4_x2", "Number of Successes for Day 2", value=5, min=1, max=20),
              sliderInput("ch4_n2", "Number of Trials for Day 2", value=6, min=1, max=20),
+             
+             "This is the last day of data collection. Choose the last number of trials and successes.",
+             
              sliderInput("ch4_x3", "Number of Successes for Day 3", value=5, min=1, max=10),
              sliderInput("ch4_n3", "Number of Trials for Day 3", value=6, min=1, max=10),
              submitButton("Submit")),
            mainPanel(
              div(
-               "In Chapter 4, we began to look at sequential analyses where 
+               "In Chapter 4, we began to look at sequential bayesian analyses where 
                with more and more data, we're able to learn more about our parameter in
-question. Below is our first graph showing our beta binomial model which you can alter
-               from the alpha and beta buttons on your left. "
+question. Below is our first graph showing our beta binomial model. Play around with the alpha and
+               beta buttons as well as trial and successes data to your left to see how it alters the
+               distribution.",
+               style = "padding-right: 5%; padding-left: 5%"
              ),
-             div(plotOutput('plot_ch41'),style = "padding-right: 10%; padding-left: 10%"),
-         div(plotOutput('plot_ch42'),style = "padding-right: 10%; padding-left: 10%"),
-div(plotOutput('plot_ch43'),style = "padding-right: 10%; padding-left: 10%")
+             div(
+               plotOutput('plot_ch41'),
+               style = "padding-right: 10%; padding-left: 10%"),
+             div(
+               "Now it is day 2 and we just collected new data. Using the prior data from day 1 as well as 
+               your inputs for day 2, we now have our updated beta bimomial distribution. What do you notice about this models prior 
+               distribution and day 1's posterior distribution?",
+               
+               style = "padding-right: 5%; padding-left: 5%"),
+         div(
+           plotOutput('plot_ch42'),
+           style = "padding-right: 10%; padding-left: 10%"),
+         div(
+           "It's now day 3 and our final day of data collection. Do you find similarities between this distribution and that of day 2's? ",
+          style= "padding-right: 5%; padding-left: 5%"
+         ),
+         div(
+           plotOutput('plot_ch43'),
+           style = "padding-right: 10%; padding-left: 10%")
              ))
 )#navbarMenu end
 )#navbarPage end
