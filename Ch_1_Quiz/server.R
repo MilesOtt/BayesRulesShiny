@@ -642,8 +642,23 @@ output$plot2<-renderPlot({
        })
        })
      
-  
-     #Chapter 5: Gamma-Poisson
+  #Chapter 4: Balancing Bayesian Models
+     
+     observeEvent(list(input$balance_samplen, input$balance_alpha, input$balance_beta
+                       ),{
+       output$balance_bayesian<-renderPlot({
+         sample_n=as.integer(input$balance_samplen)
+         x=0.6*sample_n
+         plot_beta_binomial(input$balance_alpha, input$balance_beta, sample_n, x)
+       })
+       
+       
+       
+       
+       
+       
+     })
+#Chapter 5: Gamma-Poisson
      
      observeEvent(list(input$gamma_alpha,input$gamma_beta, input$poi_n, input$poi_xn),{
        output$gamma_poisson<-renderPlot({
@@ -655,7 +670,7 @@ output$plot2<-renderPlot({
        })
      })
      
-     #Chapter 5: Normal-Normal
+#Chapter 5: Normal-Normal
      
      observeEvent(list(input$normal_mean, input$normal_sd, input$normal_samplesize, 
                        input$normal_samplemean),{

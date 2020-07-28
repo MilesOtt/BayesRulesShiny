@@ -296,14 +296,55 @@ question. Below is our first graph showing our beta binomial model. Play around 
          ),
          div(
            plotOutput('plot_ch43'),
-           style = "padding-right: 10%; padding-left: 10%")
+           style = "padding-right: 10%; padding-left: 10%"),
+         div(
+           br(),
+           br(),
+           p("This application was made by Elaona Lemoto in
+             supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+             is a textbook for undergarduates learning Bayesian statistics. "),
+           style = "padding-right: 5%; padding-left: 5%")
              )
          ),
 
 #Chapter 4: Balancing Bayesian Models
 
-tabPanel("Chapter 4: Balancing Bayesian Models"),
-
+tabPanel("Chapter 4: Balancing Bayesian Models",
+         titlePanel(
+           h1("Chapter 4 : Striking a Balance! Finding Balance Between the Prior and Data
+              ")
+         ),
+         sidebarPanel(
+           "Below, choose a sample size and an alpha and beta value.",
+           radioButtons("balance_samplen", "Sample Size", choices=c(5, 10, 15, 20, 100)),
+           sliderInput("balance_alpha", "Alpha", value=14, min=1, max=100),
+           sliderInput("balance_beta", "Beta", value=1, min=1, max=100), 
+           submitButton("Submit")
+           
+         ),
+         mainPanel(
+           "We have been talking more and more about the posterior distribution, however
+           this wouldn't be possible without combinations of observed data and prior models. The
+posterior distribution is to be a balance between the prior and the likelihood.
+           For this exercise, you can choose different sample sizes and different alpha and beta
+           values. As the sample sizes change, how does it change the balance between the prior
+           and the likelihood. For the sake of this exercise, the proportion of success will be 
+           fixed at 60%.",
+           div(
+             plotOutput(
+               "balance_bayesian"),
+               style = "padding-right: 10%; padding-left: 10%"),
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. "),
+             style = "padding-right: 5%; padding-left: 5%")
+           
+         )
+         
+),
 #Chapter 5: Gamma-Poisson
 
 tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
