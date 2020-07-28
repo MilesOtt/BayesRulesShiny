@@ -345,6 +345,82 @@ plot_beta_binomial_day3 <- function (alpha,
 } # end of function`
 
 
+plot_gamma_poisson <- function (shape, rate,
+                                sum_x = NULL,
+                                n = NULL,
+                                prior = TRUE,
+                                likelihood = TRUE,
+                                posterior = TRUE){
+  
+  if (is.null(sum_x) | is.null(n))
+    warning("To visualize the posterior,
+            specify information about the data: sum_x and n")
+  
+  
+  
+  x_min <- min(qgamma(1e-05, shape, rate),
+               qgamma(1e-05,
+                      shape + sum_x,
+                      rate + n),
+               qgamma(1e-05, sum_x+1, n))
+  x_max <- max(qgamma(0.99999, shape, rate),
+               qgamma(0.99999, shape + sum_x,
+                      rate + n),
+               qgamma(0.99999, sum_x+1, n))
+  g <- ggplot(NULL, aes(x = c(x_min, x_max))) +
+    labs(x = expression(lambda),
+         y = "density") +
+    scale_fill_manual("",
+                      values = c(prior = "gold1",
+                                 `(scaled) likelihood` = "cyan2",
+                                 posterior = "cyan4"),
+                      breaks = c("prior",
+                                 "(scaled) likelihood",
+                                 "posterior"))
+  
+  if (prior == TRUE) {
+    g <- g + stat_function(fun = dgamma,
+                           args = list(shape = shape,
+                                       rate = rate)) +
+      stat_function(fun = dgamma,
+                    args = list(shape = shape,
+                                rate = rate),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "prior"))
+  }
+  
+  if (!is.null(sum_x) & !is.null(n)) {
+    shape_post <- shape + sum_x
+    rate_post <- rate + n
+    like_scaled <- function(x) {
+      dgamma(x, shape = sum_x + 1, rate = n)
+    }
+  }
+  if (!is.null(sum_x) & !is.null(n) & (likelihood != FALSE)) {
+    g <- g +
+      stat_function(fun = like_scaled) +
+      stat_function(fun = like_scaled,
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "(scaled) likelihood"))
+  }
+  if (!is.null(sum_x) & !is.null(n) & posterior == TRUE) {
+    g <- g +
+      stat_function(fun = dgamma,
+                    args = list(shape = shape_post,
+                                rate = rate_post)) +
+      stat_function(fun = dgamma,
+                    args = list(shape = shape_post,
+                                rate = rate_post),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "posterior"))
+  }
+  g
+}
+
+
 server<-function(input, output, session) {
  output$answer<-renderPrint({ 
    req(input$q1)
@@ -565,6 +641,17 @@ output$plot2<-renderPlot({
          plot_beta_binomial_day3(alpha_prior2, beta_prior2, warn_ch4p1_day3(), warn_ch4p2_day3())
        })
        })
+     #Chapter 5: Gamma-Poisson
+     
+     observeEvent(list(input$gamma_alpha,input$gamma_beta, input$poi_n, input$poi_xn),{
+       output$gamma_poisson<-renderPlot({
+         alpha<-as.integer(input$gamma_alpha)
+         beta<-as.integer(input$gamma_beta)
+         shape<-alpha+input$poi_n
+         rate<-beta+input$poi_n
+         plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn)
+       })
+     })
 
 })
 

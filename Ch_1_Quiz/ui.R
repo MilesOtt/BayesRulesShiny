@@ -290,7 +290,43 @@ question. Below is our first graph showing our beta binomial model. Play around 
          div(
            plotOutput('plot_ch43'),
            style = "padding-right: 10%; padding-left: 10%")
-             ))
+             )
+         ),
+tabPanel("Chapter 4: Balencing Bayesian Models"),
+tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
+         titlePanel(
+           h1("Chapter 5: The Gamma-Poisson Model")
+         ),
+         sidebarPanel(
+           "Below you will find different alpha and beta values for our Gamma prior.
+           Choose different values to see how it would alter the Gamma-Poisson model.
+           ",
+           radioButtons("gamma_alpha", "Alpha", choices=c(9, 3, 6, 10)),
+           radioButtons("gamma_beta", "Beta", choices=c(3, 9, 6, 10)),
+           "After choosing values above, we now need a sample size and the sum of our observed x's.",
+           sliderInput("poi_n", "Number of Samples", value=4, min=1, max=10), 
+           sliderInput("poi_xn", "Sum of our xi's", value=11, min=1, max=100),
+           submitButton("Submit")
+           
+           
+           
+         ),
+         mainPanel(
+           "In Chapter 5.2, we talk about the Gamma-Poisson Conjugacy Family. If you
+           recall, this conjugate family has a lambda parameter that uses a Gamma prior
+           and a Poisson likelihood. In other words, the posterior distribution for 
+           this conjugate has hyper parameters depending on the prior and the likelihood. 
+           Since the Gamma-Poisson requires a Gamma prior and Poisson likelihood, use the 
+inputs to your left to play around with the model.
+For default, we are using values
+           from our fraud risk calls example in section 2, but change the values yourself
+           and see how that alters our distribution. ",
+           div(
+             plotOutput("gamma_poisson"),
+             style = "padding-right: 10%; padding-left: 10%"
+           )
+         )),
+tabPanel("Chapter 5: Introduction to the Normal Normal Model")
 )#navbarMenu end
 )#navbarPage end
 )#end of fluid page
