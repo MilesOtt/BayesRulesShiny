@@ -65,6 +65,8 @@ plot_beta <- function(alpha, beta, mean = FALSE, mode = FALSE){
   }
   p
 }
+#-----------------------------------------------------------
+
 
 plot_beta_binomial <- function (alpha,
                                 beta,
@@ -155,7 +157,97 @@ plot_beta_binomial <- function (alpha,
   
 } # end of function`
 
+#-------------------------------------------------------
 
+plot_beta_binomial_day1 <- function (alpha,
+                                beta,
+                                x = NULL,
+                                n = NULL,
+                                prior = TRUE,
+                                likelihood = TRUE,
+                                posterior = TRUE){
+  if (is.null(x) | is.null(n))
+    warning("To visualize the posterior,
+            specify data x and n")
+  #MORE GRAPHING
+  
+  g <- ggplot(NULL, aes(x = c(0, 1))) +
+    labs(x = expression(pi),
+         y = "density",
+         "The Beta Binomial Model of Michelle's Campaign ") +
+    theme(axis.text=element_text(size=16),
+          axis.title=element_text(size=16,face="bold"),
+          plot.title = element_text(size=22), 
+          legend.text = element_text(size=16))+
+    scale_fill_manual("",
+                      
+                      values = c(prior = "gold1",
+                                 
+                                 likelihood = "cyan2",
+                                 posterior = "cyan4"),
+                      breaks = c("prior",
+                                 "likelihood",
+                                 "posterior"),
+                      labels=c(
+                        "prior",
+                        "(scaled) likelihood", 
+                        "posterior"
+                      ))+
+    labs(title = "First Day Beta Binomial Model")
+  #GRAPH 
+  if (prior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha,
+                                shape2 = beta),
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "prior"))
+  }
+  
+  if (!is.null(x) & !is.null(n)) {
+    alpha_post <- alpha + x
+    beta_post <- beta + n - x
+    x_data <- x
+    like_scaled <- function(x) {
+      like_fun <- function(x) {
+        dbinom(x = x_data, size = n, prob = x)
+      }
+      scale_c <- integrate(like_fun, lower = 0, upper = 1)[[1]]
+      like_fun(x)/scale_c
+    }
+  }
+  
+  #GRAPHING
+  if (!is.null(x) & !is.null(n) & (likelihood != FALSE)) {
+    g <- g +
+      stat_function(fun = like_scaled) +
+      stat_function(fun = like_scaled,
+                    geom = "area",
+                    alpha = 0.5,
+                    aes(fill = "likelihood"))
+  }
+  #GRAPHHIN
+  if (!is.null(x) & !is.null(n) & posterior == TRUE) {
+    g <- g +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post)) +
+      stat_function(fun = dbeta,
+                    args = list(shape1 = alpha_post,
+                                shape2 = beta_post),
+                    geom = "area", alpha = 0.5,
+                    aes(fill = "posterior"))
+    
+  }
+  g
+  
+} # end of function`
+
+#-------------------------------------------------------
 
 plot_beta_binomial_day2 <- function (alpha,
                                      beta,
@@ -246,13 +338,15 @@ plot_beta_binomial_day2 <- function (alpha,
   if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
     x="title_name"
     g <- g +
-      labs(title = x)
+     labs(title=paste("Second Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta))
     
     
   }
   g
   
 }# end of function`
+
+#----------------------------------------------------------
 
 
 plot_beta_binomial_day3 <- function (alpha,
@@ -261,7 +355,8 @@ plot_beta_binomial_day3 <- function (alpha,
                                      n = NULL,
                                      prior = TRUE,
                                      likelihood = TRUE,
-                                     posterior = TRUE){
+                                     posterior = TRUE,
+                                     title_name = TRUE){
   if (is.null(x) | is.null(n))
     warning("To visualize the posterior,
             specify data x and n")
@@ -340,10 +435,19 @@ plot_beta_binomial_day3 <- function (alpha,
     
     
   }
+  
+  if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
+    x="title_name"
+    g <- g +
+      labs(title=paste("Third Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta))
+    
+    
+  }
   g
   
 } # end of function`
 
+#------------------------------------------------------
 
 plot_gamma_poisson <- function (shape, rate,
                                 sum_x = NULL,
@@ -419,6 +523,7 @@ plot_gamma_poisson <- function (shape, rate,
   }
   g
 }
+
 
 
 server<-function(input, output, session) {
@@ -621,7 +726,7 @@ output$plot2<-renderPlot({
        output$plot_ch41<-renderPlot({
        ch4_alpha=as.integer(input$ch4_alpha)
        ch4_beta=as.integer(input$ch4_beta)
-       plot_beta_binomial(ch4_alpha, ch4_beta, warn_ch4p1(), warn_ch4p2())
+       plot_beta_binomial_day1(ch4_alpha, ch4_beta, warn_ch4p1(), warn_ch4p2())
        })
        
        output$plot_ch42<-renderPlot({

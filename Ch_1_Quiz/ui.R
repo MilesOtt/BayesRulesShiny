@@ -278,6 +278,7 @@ question. Below is our first graph showing our beta binomial model. Play around 
                distribution.",
                style = "padding-right: 5%; padding-left: 5%"
              ),
+             br(),
              div(
                plotOutput('plot_ch41'),
                style = "padding-right: 10%; padding-left: 10%"),
@@ -287,6 +288,7 @@ question. Below is our first graph showing our beta binomial model. Play around 
                distribution and day 1's posterior distribution?",
                
                style = "padding-right: 5%; padding-left: 5%"),
+             br(),
          div(
            plotOutput('plot_ch42'),
            style = "padding-right: 10%; padding-left: 10%"),
@@ -294,6 +296,7 @@ question. Below is our first graph showing our beta binomial model. Play around 
            "It's now day 3 and our final day of data collection. Do you find similarities between this distribution and that of day 2's? ",
           style= "padding-right: 5%; padding-left: 5%"
          ),
+         br(),
          div(
            plotOutput('plot_ch43'),
            style = "padding-right: 10%; padding-left: 10%"),
