@@ -72,26 +72,24 @@ plot_beta_binomial <- function (alpha,
                                 beta,
                                 x = NULL,
                                 n = NULL,
+                                title_name=NULL,
                                 prior = TRUE,
                                 likelihood = TRUE,
-                                posterior = TRUE){
+                                posterior = TRUE
+                                ){
   if (is.null(x) | is.null(n))
     warning("To visualize the posterior,
             specify data x and n")
   #MORE GRAPHING
   
   g <- ggplot(NULL, aes(x = c(0, 1))) +
-    labs(x = expression(pi),
-         y = "density",
-         "The Beta Binomial Model of Michelle's Campaign ") +
+ 
     theme(axis.text=element_text(size=16),
           axis.title=element_text(size=16,face="bold"),
           plot.title = element_text(size=22), 
           legend.text = element_text(size=16))+
     scale_fill_manual("",
-                      
                       values = c(prior = "gold1",
-                                 
                                  likelihood = "cyan2",
                                  posterior = "cyan4"),
                       breaks = c("prior",
@@ -101,7 +99,9 @@ plot_beta_binomial <- function (alpha,
                         "prior",
                         "(scaled) likelihood", 
                         "posterior"
-                      ))
+                      ))+
+    labs(x = expression(pi),
+         y = "density")
   #GRAPH 
   if (prior == TRUE) {
     g <- g +
@@ -115,9 +115,6 @@ plot_beta_binomial <- function (alpha,
                     alpha = 0.5,
                     aes(fill = "prior"))
   }
-  
-  #
-  
   if (!is.null(x) & !is.null(n)) {
     alpha_post <- alpha + x
     beta_post <- beta + n - x
@@ -130,7 +127,11 @@ plot_beta_binomial <- function (alpha,
       like_fun(x)/scale_c
     }
   }
-  
+  if (!is.null(x) & !is.null(n) & !is.null(title_name)) {
+    title_name=as.character(title_name)
+    g <- g +
+      labs(title=paste(title_name))
+  }
   #GRAPHING
   if (!is.null(x) & !is.null(n) & (likelihood != FALSE)) {
     g <- g +
@@ -152,7 +153,10 @@ plot_beta_binomial <- function (alpha,
                     geom = "area", alpha = 0.5,
                     aes(fill = "posterior"))
     
+    
   }
+
+  
   g
   
 } # end of function`
@@ -336,7 +340,6 @@ plot_beta_binomial_day2 <- function (alpha,
     
   }
   if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
-    x="title_name"
     g <- g +
      labs(title=paste("Second Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta))
     
@@ -668,7 +671,7 @@ output$plot2<-renderPlot({
        output$plot_bb<-renderPlot({
          c3a=as.integer(input$c3alpha)
          c3b=as.integer(input$c3beta)
-         plot_beta_binomial(c3a,c3b,x=input$c3x,n=input$c3n)
+         plot_beta_binomial(c3a,c3b,x=input$c3x,n=input$c3n, "The Beta Binomial Model of Michelle's Campaign" )
        })
      }
      
@@ -754,14 +757,8 @@ output$plot2<-renderPlot({
        output$balance_bayesian<-renderPlot({
          sample_n=as.integer(input$balance_samplen)
          x=0.6*sample_n
-         plot_beta_binomial(input$balance_alpha, input$balance_beta, x, sample_n)
+         plot_beta_binomial(input$balance_alpha, input$balance_beta, x, sample_n,"Our Beta Binomial Model")
        })
-       
-       
-       
-       
-       
-       
      })
 #Chapter 5: Gamma-Poisson
      
@@ -773,7 +770,7 @@ output$plot2<-renderPlot({
          rate<-beta+input$poi_n
          plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn)
        })
-     })
+       })
      
 #Chapter 5: Normal-Normal
      
@@ -783,9 +780,8 @@ output$plot2<-renderPlot({
             mean<-as.integer(input$normal_sd)
             sd<-as.integer(input$normal_sd)
           })
-                       })
-
-})
+          })
+     })
 
 }
 

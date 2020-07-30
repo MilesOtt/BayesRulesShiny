@@ -233,13 +233,6 @@ tabPanel("Chapter 3: Beta Binomial Model",
              p("This application was made by Elaona Lemoto in
                supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
                is a textbook for undergarduates learning Bayesian statistics. "),
-             style = "padding-right: 5%; padding-left: 5%"),
-           div(
-             br(),
-             br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
              style = "padding-right: 5%; padding-left: 5%")
          )),
 
@@ -318,10 +311,11 @@ tabPanel("Chapter 4: Balancing Bayesian Models",
               ")
          ),
          sidebarPanel(
-           "Below, choose a sample size and an alpha and beta value.",
+           "Below, choose a sample size and an alpha and beta value. Recall that the proportion 
+           of success is fixed at 60%!",
            radioButtons("balance_samplen", "Sample Size", choices=c(5, 10, 15, 20, 100)),
-           sliderInput("balance_alpha", "Alpha", value=14, min=0, max=100),
-           sliderInput("balance_beta", "Beta", value=1, min=0, max=100), 
+           sliderInput("balance_alpha", "Alpha", value=14, min=0.01, max=100),
+           sliderInput("balance_beta", "Beta", value=1, min=0.01, max=100), 
            submitButton("Submit")
            
          ),
@@ -329,10 +323,10 @@ tabPanel("Chapter 4: Balancing Bayesian Models",
            "We have been talking more and more about the posterior distribution, however
            this wouldn't be possible without combinations of observed data and prior models. The
 posterior distribution is to be a balance between the prior and the likelihood.
-           For this exercise, you can choose different sample sizes and different alpha and beta
+           For this exercise, the propportion of success is at 60%. You can choose different sample sizes and 
+different alpha and beta
            values. As the sample sizes change, how does it change the balance between the prior
-           and the likelihood. For the sake of this exercise, the proportion of success will be 
-           fixed at 60%.",
+           and the likelihood? ",
            div(
              plotOutput(
                "balance_bayesian"),
