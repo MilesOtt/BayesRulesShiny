@@ -389,12 +389,14 @@ tabPanel("Chapter 5: Introduction to the Normal-Normal Model",
          sidebarPanel(
            "Choose a mean and a standard deviation below for our Normal prior.",
            radioButtons("normal_mean", "Normal Mean", choices=c(3.25,2, 3)), 
-           radioButtons("normal_sd", "Normal Standard Deviation", choices=c(.25, 1, 4)),
+           radioButtons("normal_sd", "Normal Prior Standard Deviation", choices=c(.25, 1, 4)),
            
            "Now that you've chosen values for our Normal prior, we need to choose values for
            our Normal likelihood. In this case, we need a sample mean and a sample size.",
            sliderInput("normal_samplemean", "Normal Sample Mean", value = 3, min=0, max=50),
            sliderInput("normal_samplesize","Normal Sample Size", value = 50,min=2, max=100),
+           sliderInput("real_sd","Population Standard Deviation (Assumingly Known)", value = 0.16, min=0.01, 
+                       max=50),
            submitButton("Submit")
  ),
          mainPanel(

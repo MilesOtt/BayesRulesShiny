@@ -540,7 +540,93 @@ plot_gamma_poisson <- function (shape, rate,
   g
 }
 
+#--------------------------------------------------------------
+#done
+plot_normal_normal<-function(mean,
+                             prior_sd,
+                             sample_mean=NULL,
+                             sample_n=NULL,
+                             sd=NULL, 
+                             prior =TRUE,
+                             likelihood= TRUE,
+                             posterior=TRUE){
+  
+  if (is.null(sample_mean) | is.null(sample_n) | is.null(sd))
+    warning("To visualize the posterior,
+            specify information about the data: sample mean, sample size, and variance")
+#done
+x <- c(mean - 4*sd, mean +4*sd)
+#done
+g<-ggplot(data = data.frame(x = x),
+       aes(x)) +
+  stat_function(fun = dnorm, n = 101, args = list(mean = mean, sd = sd)) +
+  labs(x = expression(theta),
+       y = expression(paste("f(",theta,")")))+
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=16,face="bold"),
+        plot.title = element_text(size=22), 
+        legend.text = element_text(size=16))+
+  scale_fill_manual("",
+                    values = c(prior = "gold1",
+                               `(scaled) likelihood` = "cyan2",
+                               posterior = "cyan4"),
+                    breaks = c("prior",
+                               "(scaled) likelihood",
+                               "posterior"))
 
+#done
+if (prior == TRUE) {
+  g <- g + stat_function(fun = dnorm,
+                         args = list(mean = mean,
+                                     sd = prior_sd)) +
+    stat_function(fun = dnorm,
+                  args = list(mean=mean,
+                              sd = prior_sd),
+                  geom = "area",
+                  alpha = 0.5,
+                  aes(fill = "prior"))
+}
+
+#--------------------------------
+if (!is.null(sample_mean) & !is.null(sample_n) & is.null(sd)) {
+  mean_post <- ((mean*sd)/sample_n)+(sample_mean*prior_sd)/(prior_sd+(sd/sample_n))
+  sd_post <- ((prior_sd/sample_n)/(prior_sd+(sd/sample_n)))
+  normal_normal_like<- function(x) {
+    dnorm(x, mean = sample_mean , sd=sd)
+  }
+}
+if (!is.null(sum_x) & !is.null(n) & (likelihood != FALSE)) {
+  g <- g +
+    stat_function(fun = normal_normal_like) +
+    stat_function(fun = normal_normal_like,
+                  geom = "area",
+                  alpha = 0.5,
+                  aes(fill = "(scaled) likelihood"))
+  
+#------------------------------  
+}
+#done 
+if (!is.null(sum_x) & !is.null(n) & posterior == TRUE) {
+  g <- g +
+    stat_function(fun = dnorm,
+                  args = list(mean = mean_post,
+                              sd = sd_post)) +
+    stat_function(fun = dnorm,
+                  args = list(mean = mean_post,
+                              sd = sd_post),
+                  geom = "area",
+                  alpha = 0.5,
+                  aes(fill = "posterior"))
+}
+
+g
+
+}
+
+
+
+
+#--------------------------------------------------------------
 
 server<-function(input, output, session) {
  output$answer<-renderPrint({ 
@@ -788,10 +874,12 @@ output$plot2<-renderPlot({
 #Chapter 5: Normal-Normal
      
      observeEvent(list(input$normal_mean, input$normal_sd, input$normal_samplesize, 
-                       input$normal_samplemean),{
+                       input$normal_samplemean, input$real_sd),{
           output$normal_normal<-renderPlot({
             mean<-as.integer(input$normal_sd)
             sd<-as.integer(input$normal_sd)
+            plot_normal_normal(mean, sd, input$normal_samplemean, input$normal_samplesize,
+                               input$real_sd)
           })
           })
      })
