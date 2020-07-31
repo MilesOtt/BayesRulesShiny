@@ -557,12 +557,13 @@ plot_normal_normal<-function(mean,
     warning("To visualize the posterior,
             specify information about the data: sample mean, sample size, and standard deviation")
   
-  x <- c(mean - 4*prior_sd, mean +4*prior_sd)
+  x <- c(mean - 5*prior_sd, mean +5*prior_sd)
+  
   
   
   g<-ggplot(data = data.frame(x = x),
             aes(x)) +
-    stat_function(fun = dnorm, n = 101, 
+    stat_function(fun = dnorm, n = 1001, 
                   args = list(mean = mean, sd = prior_sd)) +
     labs(x = expression(theta),
          y = expression(paste("f(",theta,")")))+
@@ -597,7 +598,7 @@ plot_normal_normal<-function(mean,
   #--------------------------------
   
   if (!is.null(sample_mean) & !is.null(sample_n) & !is.null(sd) & (likelihood != FALSE)){
-    sd2<-(sd/sample_n)
+    sd2<-(sd/sqrt(sample_n))
     
     g <- g + 
       stat_function(fun = dnorm, 
@@ -613,8 +614,8 @@ plot_normal_normal<-function(mean,
   #done
   if (!is.null(sample_mean) & !is.null(sample_n) & !is.null(sd) & posterior == TRUE) {
     
-    mean_post<-((mean*sd)/sample_n+(sample_mean*prior_sd)/(prior_sd+(sd/sample_n)))
-    sd_post<-((prior_sd/sample_n)/(prior_sd+(sd/sample_n)))
+    mean_post<-((mean*sd2^2)+(sample_mean*prior_sd^2))/(prior_sd^2+(sd2^2))
+    sd_post<-sqrt(sd^2 *sd2^2/(sd^2 +sd2^2))
     g <- g +
       stat_function(fun = dnorm,
                     args = list(mean = mean_post,
@@ -634,7 +635,7 @@ plot_normal_normal<-function(mean,
 
 
 
-plot_normal_normal(3.25, 0.25, 3.02, 50, 0.16)
+plot_normal_normal(3.25, 0.5, 3.02, 50, 0.4)
 
 #--------------------------------------------------------------
 
