@@ -455,6 +455,7 @@ plot_beta_binomial_day3 <- function (alpha,
 plot_gamma_poisson <- function (shape, rate,
                                 sum_x = NULL,
                                 n = NULL,
+                                title_name=NULL,
                                 prior = TRUE,
                                 likelihood = TRUE,
                                 posterior = TRUE){
@@ -477,6 +478,10 @@ plot_gamma_poisson <- function (shape, rate,
   g <- ggplot(NULL, aes(x = c(x_min, x_max))) +
     labs(x = expression(lambda),
          y = "density") +
+    theme(axis.text=element_text(size=16),
+          axis.title=element_text(size=16,face="bold"),
+          plot.title = element_text(size=22), 
+          legend.text = element_text(size=16))+
     scale_fill_manual("",
                       values = c(prior = "gold1",
                                  `(scaled) likelihood` = "cyan2",
@@ -484,6 +489,11 @@ plot_gamma_poisson <- function (shape, rate,
                       breaks = c("prior",
                                  "(scaled) likelihood",
                                  "posterior"))
+  if (!is.null(sum_x) & !is.null(n) & !is.null(title_name)) {
+    title_name=as.character(title_name)
+    g <- g +
+      labs(title=paste(title_name))
+  }
   
   if (prior == TRUE) {
     g <- g + stat_function(fun = dgamma,
@@ -496,6 +506,7 @@ plot_gamma_poisson <- function (shape, rate,
                     alpha = 0.5,
                     aes(fill = "prior"))
   }
+
   
   if (!is.null(sum_x) & !is.null(n)) {
     shape_post <- shape + sum_x
@@ -524,6 +535,8 @@ plot_gamma_poisson <- function (shape, rate,
                     alpha = 0.5,
                     aes(fill = "posterior"))
   }
+  
+  
   g
 }
 
@@ -768,7 +781,7 @@ output$plot2<-renderPlot({
          beta<-as.integer(input$gamma_beta)
          shape<-alpha+input$poi_n
          rate<-beta+input$poi_n
-         plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn)
+         plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn, "Our Gamma-Poisson Model")
        })
        })
      

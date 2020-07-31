@@ -356,7 +356,7 @@ tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
            radioButtons("gamma_beta", "Beta", choices=c(3, 9, 6, 10)),
            "After choosing values above, we now need a sample size and the sum of our observed x's.",
            sliderInput("poi_n", "Number of Samples", value=4, min=1, max=10), 
-           sliderInput("poi_xn", "Sum of our xi's", value=11, min=1, max=100),
+           sliderInput("poi_xn", "Sum of our xi's", value=11, min=0, max=100),
            submitButton("Submit")),
          mainPanel(
            "In Chapter 5.2, we talk about the Gamma-Poisson Conjugacy Family. If you
@@ -393,7 +393,7 @@ tabPanel("Chapter 5: Introduction to the Normal-Normal Model",
            
            "Now that you've chosen values for our Normal prior, we need to choose values for
            our Normal likelihood. In this case, we need a sample mean and a sample size.",
-           sliderInput("normal_samplemean", "Normal Sample Mean", value = 3, min=1, max=50),
+           sliderInput("normal_samplemean", "Normal Sample Mean", value = 3, min=0, max=50),
            sliderInput("normal_samplesize","Normal Sample Size", value = 50,min=2, max=100),
            submitButton("Submit")
  ),
