@@ -549,6 +549,7 @@ plot_normal_normal<-function(mean,
                              sample_mean=NULL,
                              sample_n=NULL,
                              sd=NULL, 
+                             title_name=NULL,
                              prior =TRUE,
                              likelihood= TRUE,
                              posterior=TRUE){
@@ -558,9 +559,6 @@ plot_normal_normal<-function(mean,
             specify information about the data: sample mean, sample size, and standard deviation")
   
   x <- c(mean - 5*prior_sd, mean +5*prior_sd)
-  
-  
-  
   g<-ggplot(data = data.frame(x = x),
             aes(x)) +
     stat_function(fun = dnorm, n = 1001, 
@@ -578,6 +576,11 @@ plot_normal_normal<-function(mean,
                       breaks = c("prior",
                                  "(scaled) likelihood",
                                  "posterior"))
+  if (!is.null(sample_mean) & !is.null(sample_n) & !is.null(sd) & !is.null(title_name)) {
+    title_name=as.character(title_name)
+    g <- g +
+      labs(title=paste(title_name))
+  }
   
   
   if (prior == TRUE) {
@@ -592,7 +595,7 @@ plot_normal_normal<-function(mean,
                     aes(fill = "prior"))
   }
   
-  #-------------------------------
+
   
   
   #--------------------------------
@@ -604,6 +607,7 @@ plot_normal_normal<-function(mean,
       stat_function(fun = dnorm, 
                     args = list(mean = sample_mean, sd= sd2))+
       stat_function(fun = dnorm,
+                    args = list(mean = sample_mean, sd= sd2),
                     geom = "area",
                     alpha =0.5,
                     aes(fill = "(scaled) likelihood"))
@@ -611,7 +615,7 @@ plot_normal_normal<-function(mean,
   }
   
   #------------------------------
-  #done
+  
   if (!is.null(sample_mean) & !is.null(sample_n) & !is.null(sd) & posterior == TRUE) {
     
     mean_post<-((mean*sd2^2)+(sample_mean*prior_sd^2))/(prior_sd^2+(sd2^2))
@@ -634,8 +638,6 @@ plot_normal_normal<-function(mean,
 }
 
 
-
-plot_normal_normal(3.25, 0.5, 3.02, 50, 0.4)
 
 #--------------------------------------------------------------
 
@@ -785,6 +787,8 @@ output$plot2<-renderPlot({
        })
      }
      
+   })
+     
      #Chapter 4 Sequential Bayesian Analysis
      
      observeEvent(list(input$ch4_alpha, input$ch4_beta, input$ch4_x1, input$ch4_n1,
@@ -884,17 +888,18 @@ output$plot2<-renderPlot({
      
 #Chapter 5: Normal-Normal
      
-     observeEvent(list(input$normal_mean, input$normal_sd, input$normal_samplesize, 
-                       input$normal_samplemean, input$real_sd),{
+     observeEvent(list(input$nmean, input$snd, input$nsample_n, 
+                       input$nsample_mean, input$npop_sd),{
+                        
           output$normal_normal<-renderPlot({
-            mean<-as.integer(input$normal_sd)
-            sd<-as.integer(input$normal_sd)
-            plot_normal_normal(mean, sd, input$normal_samplemean, input$normal_samplesize,
-                               input$real_sd)
+            mean<-as.integer(input$nmean)
+            sd<-as.integer(input$nsd)
+            plot_normal_normal(mean, sd, input$nsample_mean, input$nsample_n,
+                               input$npop_sd, "Our Normal-Normal Model")
           })
-          })
-     })
+       
 
+                       })
 }
 
 

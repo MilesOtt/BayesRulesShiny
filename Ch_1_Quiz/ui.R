@@ -388,15 +388,15 @@ tabPanel("Chapter 5: Introduction to the Normal-Normal Model",
          ),
          sidebarPanel(
            "Choose a mean and a standard deviation below for our Normal prior.",
-           radioButtons("normal_mean", "Normal Mean", choices=c(3.25,2, 3)), 
-           radioButtons("normal_sd", "Normal Prior Standard Deviation", choices=c(.25, 1, 4)),
+           radioButtons("nmean", "Normal Mean", choices=c(3.25,2, 3)), 
+           radioButtons("nsd", "Normal Prior Standard Deviation", choices=c(0.5, 1, 4)),
            
            "Now that you've chosen values for our Normal prior, we need to choose values for
            our Normal likelihood. In this case, we need a sample mean and a sample size.",
-           sliderInput("normal_samplemean", "Normal Sample Mean", value = 3, min=0, max=50),
-           sliderInput("normal_samplesize","Normal Sample Size", value = 50,min=2, max=100),
-           sliderInput("real_sd","Population Standard Deviation (Assumingly Known)", value = 0.16, min=0.01, 
-                       max=50),
+           sliderInput("nsample_mean", "Normal Sample Mean", value = 3, min=0, max=10),
+           sliderInput("nsample_n","Normal Sample Size", value = 1,min=1, max=100),
+           sliderInput("npop_sd","Population Standard Deviation (Assumingly Known)", value = 0.4, min=0.01, 
+                       max=10),
            submitButton("Submit")
  ),
          mainPanel(
@@ -413,7 +413,7 @@ of these types of families by learning more about the
            in-text example of volume of hippocampus in the brain from 50 different collegiate American
            football players.",
            div(
-             plotOutput("normal-normal"),
+             plotOutput("normal_normal"),
              style = "padding-right: 10%; padding-left: 10%"
              ),
            div(
