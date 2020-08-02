@@ -636,9 +636,16 @@ plot_normal_normal<-function(mean,
   g
   
 }
-
-
-
+#--------------------------
+# sim_beta_binomial<-function(alpha, 
+#                             beta,
+#                             x = NULL, 
+#                             n = NULL, 
+#                             chains = 4, 
+#                             iter=1000){
+#   
+#   beta_bin model<-
+# }
 #--------------------------------------------------------------
 
 server<-function(input, output, session) {
@@ -878,8 +885,8 @@ output$plot2<-renderPlot({
      
      observeEvent(list(input$gamma_alpha,input$gamma_beta, input$poi_n, input$poi_xn),{
        output$gamma_poisson<-renderPlot({
-         alpha<-as.integer(input$gamma_alpha)
-         beta<-as.integer(input$gamma_beta)
+         alpha<-as.numeric(input$gamma_alpha)
+         beta<-as.numeric(input$gamma_beta)
          shape<-alpha+input$poi_n
          rate<-beta+input$poi_n
          plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn, "Our Gamma-Poisson Model")
@@ -892,14 +899,21 @@ output$plot2<-renderPlot({
                        input$nsample_mean, input$npop_sd),{
                         
           output$normal_normal<-renderPlot({
-            mean<-as.integer(input$nmean)
-            sd<-as.integer(input$nsd)
+            mean<-as.numeric(input$nmean)
+            sd<-as.numeric(input$nsd)
             plot_normal_normal(mean, sd, input$nsample_mean, input$nsample_n,
                                input$npop_sd, "Our Normal-Normal Model")
           })
        
 
                        })
+     
+
+#Chapter 6: MSMC Testing
+     
+     
+
+          
 }
 
 
