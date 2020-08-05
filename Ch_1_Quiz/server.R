@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(shinyjs)
+library(rstan)
 
 plot_beta <- function(alpha, beta, mean = FALSE, mode = FALSE){
   
@@ -637,15 +638,35 @@ plot_normal_normal<-function(mean,
   
 }
 #--------------------------
-# sim_beta_binomial<-function(alpha, 
-#                             beta,
-#                             x = NULL, 
-#                             n = NULL, 
-#                             chains = 4, 
-#                             iter=1000){
-#   
-#   beta_bin model<-
-# }
+sim_beta_binomial<-function(alpha,
+                            beta,
+                            x,
+                            n,
+                            chains = 4,
+                            iter=1000){
+
+  beta_bin_model <- "
+     data {
+  real<lower=0> alpha;
+  real<lower=0> beta;
+  int<lower=1> n;
+  int<lower=0, upper=n> x;
+}
+
+parameters {
+real<lower=0, upper=1> pi;
+}
+
+model {
+x ~ binomial(n, pi);
+pi ~ beta(alpha, beta);
+}
+"
+stan(
+  model_code = beta_bin_model,
+  data = list(x = x, n = n, alpha = alpha, beta = beta),
+  chains = chains, iter = iter)
+}
 #--------------------------------------------------------------
 
 server<-function(input, output, session) {
@@ -887,7 +908,7 @@ output$plot2<-renderPlot({
        output$gamma_poisson<-renderPlot({
          alpha<-as.numeric(input$gamma_alpha)
          beta<-as.numeric(input$gamma_beta)
-         shape<-alpha+input$poi_n
+         shape<-alpha+input$poi_xn
          rate<-beta+input$poi_n
          plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn, "Our Gamma-Poisson Model")
        })
@@ -909,7 +930,51 @@ output$plot2<-renderPlot({
                        })
      
 
-#Chapter 6: MSMC Testing
+#Chapter 6: Grid Approximation
+    observeEvent(list(input$g6_alpha, input$g6_beta, input$g6_lambda, input$g6_grid),{
+      alpha<-as.numeric(input$g6_alpha)
+      beta<-as.numeric(input$g6_beta) 
+      
+      output$grid_p1<-renderPlot({
+        shape<-alpha+input$g6_lambda
+        rate<-beta+1
+        plot_gamma_poisson(shape, rate, input$g6_lambda,1, "Our Gamma Prior and Poisson Likelihood")
+      
+      })
+      
+      output$grid_p2<-renderPlot({
+        shape<-alpha+input$g6_lambda
+        rate<-beta+1
+        # Step 1: Define a grid of 501 lambda values
+        lambda_grid <- seq(from = 0, to = input$g6_grid, length = 501) 
+        grid_data <- data.frame(lambda_grid)
+        # Step 2: Evaluate the prior & likelihood at each lambda
+        grid_data <- grid_data %>%
+          mutate(prior = dgamma(lambda_grid, alpha, beta)) %>% 
+          mutate(likelihood = dpois(5, lambda_grid))
+        # Step 3: Approximate the posterior
+        grid_data <- grid_data %>%
+          mutate(unnormalized = likelihood * prior) %>% 
+          mutate(posterior = unnormalized / sum(unnormalized))
+        # Set the seed
+        set.seed(84735)
+        # Step 4: sample from the discretized posterior
+        post_sample <- sample_n(grid_data, size = 10000, weight = posterior, replace = TRUE)
+        # Histogram of the grid simulation with posterior pdf
+        ggplot(post_sample, aes(x = lambda_grid)) + geom_histogram(aes(y = ..density..), color = "white") +
+          stat_function(fun = dgamma, args = list(shape,rate )) + lims(x = c(0, input$g6_grid))+
+          
+          theme(axis.text=element_text(size=16),
+                axis.title=element_text(size=16,face="bold"),
+                plot.title = element_text(size=22), 
+                legend.text = element_text(size=16))+
+          labs(title="Posterior Estimation Using Grid Approximation")
+        
+    
+     
+      
+      })
+    })
      
      
 

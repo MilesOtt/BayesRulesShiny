@@ -424,7 +424,60 @@ of these types of families by learning more about the
                is a textbook for undergarduates learning Bayesian statistics. "),
              style = "padding-right: 5%; padding-left: 5%")
            
-         ))
+         )),
+tabPanel("Chapter 6: Grid Approximation", 
+         titlePanel(
+           h1("Chapter 6: Approximating a Gamma-Poisson Posterior with Grid Approximation")
+           ),
+         sidebarPanel(
+           "For your first step, alter the alpha, beta, and lambda values below. Recall that we ususally
+           have a number of trials to choose from. In this case, we are keeping n fixed at 1.",
+           radioButtons("g6_alpha", "Alpha", choices=c(3, 6, 7, 8)),
+           radioButtons("g6_beta", "Beta", choices=c(1, 3, 6, 9)), 
+           sliderInput("g6_lambda", "Rate of Success", value=5, min=0, max=50), 
+           "Given how your Gamma prior and Poisson Likelihood distributions appear, change your grid values!",
+           sliderInput("g6_grid", "Grid values ", value=15, min=0, max=50),
+           submitButton("Submit")
+         ),
+         mainPanel(
+           "In section 6.1.2, we begin to apply our grid approximation knowledge to a 
+           Gamma-Poisson Model. For this exercise, we are going to try approximate different posterior's given different prior and likelihood values.
+In order to utilize our approximation tool, we need to establish 
+           more information about our model. Recall for a Gamma-Poisson model, you need a Gamma prior 
+and Poisson likelihood.
+           As default we used the in-text example alpha and beta values as well as rate of success, but change
+the values yourself to see how it would alter the distributions. Now having set up our models, let's
+move on to the grid approximations. For our first step, we need to specify a discrete grid of lambda values. Those 
+values are where we would approximate the posterior. Recall that the Poisson likelihood paramater, lambda, 
+can only take positive 
+values from 0 to infinity. However, we also found that after plotting our prior and likelihood functions, 
+we would only 
+have a possible lambda values from 0 to 15. As you alter the alpha and beta values to your left, 
+look at how the
+distribution changes and change your lambda grid values accordingly. ",
+           div(
+             plotOutput("grid_p1"),
+             style = "padding-right: 5%; padding-left: 5%"),
+           
+           div(
+             "Now seeing how our prior and likelihood distributions look, use the grid slider to your 
+             left to change the lambda values accordingly. Does our approximation check out?",
+             style= "padding-right: 5%; padding-left: 5%"
+           ),
+           div(
+             plotOutput("grid_p2"),
+             style = "padding-right: 10%; padding-left: 10%"),
+          
+           
+           
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. ")
+           
+         )))
 )#navbarMenu end
 )#navbarPage end
 )#end of fluid page
