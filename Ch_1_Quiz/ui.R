@@ -484,7 +484,7 @@ tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
          ),
          sidebarPanel(
            "Using the slider below, change the standard deviation of our model. ",
-           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=5),
+           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=5, step=0.001),
            submitButton("Submit")
          ), 
          
