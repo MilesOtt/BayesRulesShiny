@@ -477,7 +477,49 @@ distribution changes and change your lambda grid values accordingly. ",
                supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
                is a textbook for undergarduates learning Bayesian statistics. ")
            
-         )))
+         ))),
+tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
+         titlePanel(
+           h1("Chapter 7: Tuning the Metropolis-Hastings Algorithm")
+         ),
+         sidebarPanel(
+           "Using the slider below, change the standard deviation of our model. ",
+           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=1),
+           submitButton("Submit")
+         ), 
+         
+         mainPanel(
+           "In Chapter 6, we began to talk about Markov chain tours for simulating and 
+approximating a posterior
+           distribution. The Metropolis-Hastings algorithm in section 7.2 works at formulating
+           that chain step-by-step without rStan which you can follow with the in-text R code. 
+For the purpose 
+           of this exercise, you will be changing the size of the standard deviation of our chosen 
+model and 
+           evaluating it's impact on our Markov trace plots. What do you notice about using a 
+           really small standard deviation? What about a large one?",
+           div(
+             plotOutput("mcmc_trace_plot"),
+             style = "padding-right: 10%; padding-left: 10%"),
+           
+           
+           
+           div(
+             br(),
+             br(),
+             p("This application was made by Elaona Lemoto in
+               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
+               is a textbook for undergarduates learning Bayesian statistics. ")
+)))
+#not looking for too small and not too big proprosals 
+
+#read the chapters and run the code
+#Shiny app to make would be one o the ex. but changidng how bing the standard deviation and 
+#how it changes to trace plot
+#independent sampling theorem
+#make the metropiplolish hastinsgs ex. and have the options to change the sd for the
+#propposal model 
+#have a plot tour plot and density plot. 
 )#navbarMenu end
 )#navbarPage end
 )#end of fluid page

@@ -1,7 +1,6 @@
 library(shiny)
 library(tidyverse)
 library(shinyjs)
-library(rstan)
 
 plot_beta <- function(alpha, beta, mean = FALSE, mode = FALSE){
   
@@ -638,34 +637,71 @@ plot_normal_normal<-function(mean,
   
 }
 #--------------------------
-sim_beta_binomial<-function(alpha,
-                            beta,
-                            x,
-                            n,
-                            chains = 4,
-                            iter=1000){
+# sim_beta_binomial<-function(alpha,
+#                             beta,
+#                             x,
+#                             n,
+#                             chains = 4,
+#                             iter=1000){
+# 
+#   beta_bin_model <- "
+#      data {
+#   real<lower=0> alpha;
+#   real<lower=0> beta;
+#   int<lower=1> n;
+#   int<lower=0, upper=n> x;
+# }
+# 
+# parameters {
+# real<lower=0, upper=1> pi;
+# }
+# 
+# model {
+# x ~ binomial(n, pi);
+# pi ~ beta(alpha, beta);
+# }
+# "
+# stan(
+#   model_code = beta_bin_model,
+#   data = list(x = x, n = n, alpha = alpha, beta = beta),
+#   chains = chains, iter = iter)
+# }
 
-  beta_bin_model <- "
-     data {
-  real<lower=0> alpha;
-  real<lower=0> beta;
-  int<lower=1> n;
-  int<lower=0, upper=n> x;
+
+
+one_mh_iteration <- function(sigma, current){
+  proposal <- rnorm(1, mean = current, sd = sigma)
+
+  if(proposal < 0) {alpha <- 0}
+  else {
+    proposal_plaus <- dgamma(proposal,1,1) * dpois(0,proposal) 
+    current_plaus <- dgamma(current,1,1) * dpois(0,current)
+    alpha <- min(1, proposal_plaus / current_plaus)
+    }
+  nextstop <- sample(c(proposal, current), 
+                      size = 1, 
+                      prob = c(alpha, 1-alpha))
+  # Return the results
+  return(data.frame(proposal, alpha, next_stop))
+  
 }
 
-parameters {
-real<lower=0, upper=1> pi;
-}
 
-model {
-x ~ binomial(n, pi);
-pi ~ beta(alpha, beta);
-}
-"
-stan(
-  model_code = beta_bin_model,
-  data = list(x = x, n = n, alpha = alpha, beta = beta),
-  chains = chains, iter = iter)
+mh_tour<- function(N, sigma){
+  # 1. Start the chain at location 1 current <- 1
+  # 2. Initialize the simulation
+  lambda <- rep(0, N)
+  # 3. Simulate N Markov chain stops
+  for(i in 1:N){
+    # Simulate one iteration
+    sim <- one_mh_iteration(sigma = sigma, current = 1)
+    # Record next location
+    lambda[i] <- sim$next_stop
+    # Reset the current location
+    current <- sim$next_stop 
+    }
+  # 4. Return the chain locations
+  return(data.frame(iteration = c(1:N), lambda)) 
 }
 #--------------------------------------------------------------
 
@@ -975,7 +1011,36 @@ output$plot2<-renderPlot({
       
       })
     })
-     
+    
+    #Chapter 7: Metropolis-Hastings
+    
+    
+     observeEvent( input$mcmc_sd,{
+       
+       
+       output$mcmc_trace_plot<-renderPlot({
+         # current<-1
+         # set.seed(4)
+         # proposal <- rnorm(1, mean = current, sd = input$mcmc_sd) 
+         # proposal_plaus <- dgamma(proposal,1,1) * dpois(0,proposal)
+         # current_plaus <- dgamma(current,1,1) * dpois(0,current)
+         # alpha <- min(1, proposal_plaus / current_plaus)
+         # next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
+         
+       mh_simulation_1 <- mh_tour(N = 5000, sigma = input$mcmc_sd)
+       
+       ggplot(mh_simulation_1, aes(x = iteration, y = lambda)) + geom_line()+
+         labs(title = "Tour")
+       
+       # ggplot(mh_simulation_1, aes(x = lambda)) + geom_histogram(color = "white")+
+       #   labs(title = "Iteration")
+       
+       
+       })
+       
+       
+       
+     })
      
 
           
