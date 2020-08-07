@@ -484,14 +484,14 @@ tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
          ),
          sidebarPanel(
            "Using the slider below, change the standard deviation of our model. ",
-           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=1),
+           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=5),
            submitButton("Submit")
          ), 
          
          mainPanel(
            "In Chapter 6, we began to talk about Markov chain tours for simulating and 
 approximating a posterior
-           distribution. The Metropolis-Hastings algorithm in section 7.2 works at formulating
+           distribution. The Metropolis-Hastings algorithm R code in section 7.2 works at formulating
            that chain step-by-step without rStan which you can follow with the in-text R code. 
 For the purpose 
            of this exercise, you will be changing the size of the standard deviation of our chosen 
@@ -500,6 +500,10 @@ model and
            really small standard deviation? What about a large one?",
            div(
              plotOutput("mcmc_trace_plot"),
+             style = "padding-right: 10%; padding-left: 10%"),
+
+           div(
+             plotOutput("mcmc_iteration"),
              style = "padding-right: 10%; padding-left: 10%"),
            
            

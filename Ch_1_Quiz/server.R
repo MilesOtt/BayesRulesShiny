@@ -678,7 +678,7 @@ one_mh_iteration <- function(sigma, current){
     current_plaus <- dgamma(current,1,1) * dpois(0,current)
     alpha <- min(1, proposal_plaus / current_plaus)
     }
-  nextstop <- sample(c(proposal, current), 
+  next_stop <- sample(c(proposal, current), 
                       size = 1, 
                       prob = c(alpha, 1-alpha))
   # Return the results
@@ -1019,22 +1019,35 @@ output$plot2<-renderPlot({
        
        
        output$mcmc_trace_plot<-renderPlot({
-         # current<-1
-         # set.seed(4)
-         # proposal <- rnorm(1, mean = current, sd = input$mcmc_sd) 
-         # proposal_plaus <- dgamma(proposal,1,1) * dpois(0,proposal)
-         # current_plaus <- dgamma(current,1,1) * dpois(0,current)
-         # alpha <- min(1, proposal_plaus / current_plaus)
-         # next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
+         current<-1
+         set.seed(4)
+         proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
+         proposal_plaus <- dgamma(proposal,1,2) * dpois(0,proposal)
+         current_plaus <- dgamma(current,1,2) * dpois(0,current)
+         alpha <- min(1, proposal_plaus / current_plaus)
+         next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
          
        mh_simulation_1 <- mh_tour(N = 5000, sigma = input$mcmc_sd)
        
        ggplot(mh_simulation_1, aes(x = iteration, y = lambda)) + geom_line()+
          labs(title = "Tour")
+       })
        
-       # ggplot(mh_simulation_1, aes(x = lambda)) + geom_histogram(color = "white")+
-       #   labs(title = "Iteration")
+      output$mcmc_iteration<-renderPlot({
+        
+        current<-1
+        set.seed(4)
+        proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
+        proposal_plaus <- dgamma(proposal,1,2) * dpois(0,proposal)
+        current_plaus <- dgamma(current,1,2) * dpois(0,current)
+        alpha <- min(1, proposal_plaus / current_plaus)
+        next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
+        
+        mh_simulation_1 <- mh_tour(N = 5000, sigma = input$mcmc_sd)
        
+       ggplot(mh_simulation_1, aes(x = lambda)) + geom_histogram(color = "white")+
+         labs(title = "Iteration")
+  
        
        })
        
