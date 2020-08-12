@@ -2,9 +2,38 @@ library(shiny)
 library(tidyverse)
 library(shinyjs)
 
+
 ui<-fluidPage(
   navbarPage("Bayes Rules!",
-             h6("Welcome to Bayes Rules! Interactive Exercises "),
+             tabPanel("About",
+                        h2("Welcome to Bayes Rules! Interactive Exercises "),
+                      fluidRow(
+                        column(6,
+                               h4("Aboout This Page"),
+                               div(
+                        p("Here you'll have exercises that supplement certain sections of Bayes Rules!
+                           to further assist you in your journey of learning Bayesian statistics. These exercises can be 
+                           found in the top bar titled, 'Exercises'. From there you will have a drop-down list of 
+                           different chapters and sections that we've created for you. After choosing
+                           an app, follow the in-app instructions to learn more about that topic. Certain 
+                          chapters include Bayes Rule! R-package functions, so be sure to load our R-package
+                          to use it on your own."), 
+                        style = "padding-right: 5%; padding-left: 5%"),
+
+                        h5("Built with",
+                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "30px"),
+                           "by",
+                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/07/RStudio-Logo-Blue-Gray.png", height = "30px"),
+                           ".")),
+                      column(6,
+                             h4("About the Authors"),
+                             div(
+                               p("Bayes Rules! is a textbook designed for students interested in learning about
+                               Bayesian statistics at the undergraduate and graduate level.
+                               ")
+                             )
+                    )))
+             ,
              navbarMenu("Exercises",
                         #Chapter 1 Quiz
                         tabPanel("Chapter 1 Quiz",
@@ -53,7 +82,7 @@ verbatimTextOutput("answer"),
       is a textbook for undergarduates learning Bayesian statistics. ")),
 
 #Chapter 2, Posterior
-tabPanel("Chapter 2 Posterior",
+tabPanel("Chapter 2: Posterior",
          titlePanel(
            h1("Chapter 2.1.5: Posterior Simulation with Article Verification", align = "center")
          ),
@@ -169,12 +198,20 @@ tabPanel("Chapter 3: Beta Model",
              strong("The goal of this app is to get you a bit more familiarized with the
                     beta model which will be discussed throughout chapter 3. In this exercise,
                     you can play around with the beta model's two parameters, alpha and beta.
-                    You can also choose whether to have the mean and mode depicted on the graph."),
+                    You can also choose whether to have the mean and mode depicted on the graph. This 
+                    Shiny app uses the plot_beta function from the  Bayes Rules! R-package! Be sure to 
+                    load it on your own R and use it "),
              style = "padding-right: 5%; padding-left: 5%"
              ),
            div(
              plotOutput('plot_b'),
              style = "padding-right: 10%; padding-left: 10%"),
+           div(
+             "This 
+             Shiny app uses the plot_beta function from the  Bayes Rules! R-package. Be sure to 
+             load it on your own R and try it yourself. ",
+             style = "padding-right: 5%; padding-left: 5%"
+           ),
            div(
              br(),
              br(),
@@ -227,6 +264,13 @@ tabPanel("Chapter 3: Beta Binomial Model",
            div(
              plotOutput('plot_bb'),
              style = "padding-right: 10%; padding-left: 10%"),
+  
+           div(
+             "This 
+             Shiny app uses the plot_beta_binomial function from the  Bayes Rules! R-package. Be sure to 
+             load it on your own R and try it yourself. ",
+           style = "padding-right: 5%; padding-left: 5%")
+           ,
            div(
              br(),
              br(),
@@ -268,7 +312,8 @@ tabPanel("Chapter 4: Sequential Bayesian Analysis",
                with more and more data, we're able to learn more about our parameter in
 question. Below is our first graph showing our beta binomial model. Play around with the alpha and
                beta buttons as well as trial and successes data to your left to see how it alters the
-               distribution.",
+               distribution. Just like our last section, Chapter 3: Beta Binomial Model, we are using the plot_beta_binomrial 
+               function from our R-package to plot these models.",
                style = "padding-right: 5%; padding-left: 5%"
              ),
              br(),
@@ -373,6 +418,13 @@ For default, we are using values
              style = "padding-right: 10%; padding-left: 10%"
            ),
            div(
+             "This 
+             Shiny app uses the plot_gamma_poisson function from the  Bayes Rules! R-package to plot these
+distributions. Be sure to 
+             load it on your own R and try it out  yourself. ",
+           style = "padding-right: 5%; padding-left: 5%"
+           ),
+           div(
              br(),
              br(),
              p("This application was made by Elaona Lemoto in
@@ -411,7 +463,8 @@ of these types of families by learning more about the
            and likelihood. Like our last exercise, change the inputs for our Normal prior and our Normal
            likelihood to see how it alters our distribution. As default, we are using values from our
            in-text example of volume of hippocampus in the brain from 50 different collegiate American
-           football players.",
+           football players. Also, be sure to check out the plot_normal_normal function in the Bayes Rules!
+           R-package!- This plot below wouldn't be possible without it!",
            div(
              plotOutput("normal_normal"),
              style = "padding-right: 10%; padding-left: 10%"
@@ -425,7 +478,7 @@ of these types of families by learning more about the
              style = "padding-right: 5%; padding-left: 5%")
            
          )),
-tabPanel("Chapter 6: Grid Approximation", 
+tabPanel("Chapter 6: Grid Approximation",
          titlePanel(
            h1("Chapter 6: Approximating a Gamma-Poisson Posterior with Grid Approximation")
            ),
@@ -433,50 +486,50 @@ tabPanel("Chapter 6: Grid Approximation",
            "For your first step, alter the alpha, beta, and lambda values below. Recall that we ususally
            have a number of trials to choose from. In this case, we are keeping n fixed at 1.",
            radioButtons("g6_alpha", "Alpha", choices=c(3, 6, 7, 8)),
-           radioButtons("g6_beta", "Beta", choices=c(1, 3, 6, 9)), 
-           sliderInput("g6_lambda", "Rate of Success", value=5, min=0, max=50), 
+           radioButtons("g6_beta", "Beta", choices=c(1, 3, 6, 9)),
+           sliderInput("g6_lambda", "Rate of Success", value=5, min=0, max=50),
            "Given how your Gamma prior and Poisson Likelihood distributions appear, change your grid values!",
            sliderInput("g6_grid", "Grid values ", value=15, min=0, max=50),
            submitButton("Submit")
          ),
          mainPanel(
-           "In section 6.1.2, we begin to apply our grid approximation knowledge to a 
+           "In section 6.1.2, we begin to apply our grid approximation knowledge to a
            Gamma-Poisson Model. For this exercise, we are going to try approximate different posterior's given different prior and likelihood values.
-In order to utilize our approximation tool, we need to establish 
-           more information about our model. Recall for a Gamma-Poisson model, you need a Gamma prior 
+In order to utilize our approximation tool, we need to establish
+           more information about our model. Recall for a Gamma-Poisson model, you need a Gamma prior
 and Poisson likelihood.
            As default we used the in-text example alpha and beta values as well as rate of success, but change
 the values yourself to see how it would alter the distributions. Now having set up our models, let's
-move on to the grid approximations. For our first step, we need to specify a discrete grid of lambda values. Those 
-values are where we would approximate the posterior. Recall that the Poisson likelihood paramater, lambda, 
-can only take positive 
-values from 0 to infinity. However, we also found that after plotting our prior and likelihood functions, 
-we would only 
-have a possible lambda values from 0 to 15. As you alter the alpha and beta values to your left, 
+move on to the grid approximations. For our first step, we need to specify a discrete grid of lambda values. Those
+values are where we would approximate the posterior. Recall that the Poisson likelihood paramater, lambda,
+can only take positive
+values from 0 to infinity. However, we also found that after plotting our prior and likelihood functions,
+we would only
+have a possible lambda values from 0 to 15. As you alter the alpha and beta values to your left,
 look at how the
 distribution changes and change your lambda grid values accordingly. ",
            div(
              plotOutput("grid_p1"),
              style = "padding-right: 5%; padding-left: 5%"),
-           
+
            div(
-             "Now seeing how our prior and likelihood distributions look, use the grid slider to your 
+             "Now seeing how our prior and likelihood distributions look, use the grid slider to your
              left to change the lambda values accordingly. Does our approximation check out?",
              style= "padding-right: 5%; padding-left: 5%"
            ),
            div(
              plotOutput("grid_p2"),
              style = "padding-right: 10%; padding-left: 10%"),
-          
-           
-           
+
+
+
            div(
              br(),
              br(),
              p("This application was made by Elaona Lemoto in
                supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
                is a textbook for undergarduates learning Bayesian statistics. ")
-           
+
          ))),
 tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
          titlePanel(
@@ -484,7 +537,16 @@ tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
          ),
          sidebarPanel(
            "Using the slider below, change the standard deviation of our model. ",
-           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=5, step=0.001),
+           
+           #Try really small values and really big values and try values to see
+           #try to find an app. sd (use wording from the book)
+           #We're using a normal proposal model.
+           # Explicty where our model we're using
+           #Have priors be different (Changes the alpha and beta for current)
+           #Change the data (change 0 do it  for the depois)
+           
+           #We're doing doing a Gamma-Poisson. Prior and data used. 
+           sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=10, step=0.0001),
            submitButton("Submit")
          ), 
          
@@ -505,9 +567,6 @@ model and
            div(
              plotOutput("mcmc_iteration"),
              style = "padding-right: 10%; padding-left: 10%"),
-           
-           
-           
            div(
              br(),
              br(),

@@ -692,6 +692,7 @@ mh_tour<- function(N, sigma){
   # 2. Initialize the simulation
   lambda <- rep(0, N)
   # 3. Simulate N Markov chain stops
+  current<-1
   for(i in 1:N){
     # Simulate one iteration
     sim <- one_mh_iteration(sigma = sigma, current = current)
@@ -840,18 +841,29 @@ output$plot2<-renderPlot({
    #Chapter 3 Beta Binomial Model
 
    observeEvent(list(input$c3alpha, input$c3beta, input$c3x, input$c3n),{
-     if (input$c3x>input$c3n){
-       shinyjs::disable('c3x');
-     }else{
-       shinyjs::enable('c3x')
+     
+     warn_ch3p1<-reactive({
+       validate(
+         need(input$c3x<=input$c3n, "Make sure number of successes is less than or equal to the number of trials!")
+       )
+       return(input$c3x)
+       
+     })
+     
+     warn_ch3p2<-reactive({
+       validate(
+         need(input$c3x<=input$c3n, "Make sure number of successes is less than or equal to the number of trials!")
+       )
+       return(input$c3n)
+       
+     })
        output$plot_bb<-renderPlot({
          c3a=as.integer(input$c3alpha)
          c3b=as.integer(input$c3beta)
-         plot_beta_binomial(c3a,c3b,x=input$c3x,n=input$c3n, "The Beta Binomial Model of Michelle's Campaign" )
+         plot_beta_binomial(c3a,c3b,warn_ch3p1(),warn_ch3p2(), "The Beta Binomial Model of Michelle's Campaign" )
        })
-     }
+     })
      
-   })
      
      #Chapter 4 Sequential Bayesian Analysis
      
@@ -969,28 +981,28 @@ output$plot2<-renderPlot({
 #Chapter 6: Grid Approximation
     observeEvent(list(input$g6_alpha, input$g6_beta, input$g6_lambda, input$g6_grid),{
       alpha<-as.numeric(input$g6_alpha)
-      beta<-as.numeric(input$g6_beta) 
-      
+      beta<-as.numeric(input$g6_beta)
+
       output$grid_p1<-renderPlot({
         shape<-alpha+input$g6_lambda
         rate<-beta+1
         plot_gamma_poisson(shape, rate, input$g6_lambda,1, "Our Gamma Prior and Poisson Likelihood")
-      
+
       })
-      
+
       output$grid_p2<-renderPlot({
         shape<-alpha+input$g6_lambda
         rate<-beta+1
         # Step 1: Define a grid of 501 lambda values
-        lambda_grid <- seq(from = 0, to = input$g6_grid, length = 501) 
+        lambda_grid <- seq(from = 0, to = input$g6_grid, length = 501)
         grid_data <- data.frame(lambda_grid)
         # Step 2: Evaluate the prior & likelihood at each lambda
         grid_data <- grid_data %>%
-          mutate(prior = dgamma(lambda_grid, alpha, beta)) %>% 
+          mutate(prior = dgamma(lambda_grid, alpha, beta)) %>%
           mutate(likelihood = dpois(5, lambda_grid))
         # Step 3: Approximate the posterior
         grid_data <- grid_data %>%
-          mutate(unnormalized = likelihood * prior) %>% 
+          mutate(unnormalized = likelihood * prior) %>%
           mutate(posterior = unnormalized / sum(unnormalized))
         # Set the seed
         set.seed(84735)
@@ -999,19 +1011,19 @@ output$plot2<-renderPlot({
         # Histogram of the grid simulation with posterior pdf
         ggplot(post_sample, aes(x = lambda_grid)) + geom_histogram(aes(y = ..density..), color = "white") +
           stat_function(fun = dgamma, args = list(shape,rate )) + lims(x = c(0, input$g6_grid))+
-          
+
           theme(axis.text=element_text(size=16),
                 axis.title=element_text(size=16,face="bold"),
-                plot.title = element_text(size=22), 
+                plot.title = element_text(size=22),
                 legend.text = element_text(size=16))+
           labs(title="Posterior Estimation Using Grid Approximation")
-        
-    
-     
-      
+
+
+
+
       })
     })
-    
+#     
     #Chapter 7: Metropolis-Hastings
     
     
@@ -1019,7 +1031,7 @@ output$plot2<-renderPlot({
        
        
        output$mcmc_trace_plot<-renderPlot({
-         current<-6
+
          #start at unreasonable value
          set.seed(4)
          proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
@@ -1036,7 +1048,7 @@ output$plot2<-renderPlot({
        
       output$mcmc_iteration<-renderPlot({
         
-        current<-6
+
         set.seed(4)
         proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
         proposal_plaus <- dgamma(proposal,1,2) * dpois(0,proposal)
