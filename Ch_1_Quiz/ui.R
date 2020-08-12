@@ -199,8 +199,8 @@ tabPanel("Chapter 3: Beta Model",
                     beta model which will be discussed throughout chapter 3. In this exercise,
                     you can play around with the beta model's two parameters, alpha and beta.
                     You can also choose whether to have the mean and mode depicted on the graph. This 
-                    Shiny app uses the plot_beta function from the  Bayes Rules! R-package! Be sure to 
-                    load it on your own R and use it "),
+                    Shiny app uses the plot_beta function from the  Bayes Rules! R-package. Be sure to 
+                    check it out on your R-studio! "),
              style = "padding-right: 5%; padding-left: 5%"
              ),
            div(
@@ -268,7 +268,7 @@ tabPanel("Chapter 3: Beta Binomial Model",
            div(
              "This 
              Shiny app uses the plot_beta_binomial function from the  Bayes Rules! R-package. Be sure to 
-             load it on your own R and try it yourself. ",
+             load it on your own R-studio and try it out yourself. ",
            style = "padding-right: 5%; padding-left: 5%")
            ,
            div(
@@ -514,7 +514,8 @@ values from 0 to infinity. However, we also found that after plotting our prior 
 we would only
 have a possible lambda values from 0 to 15. As you alter the alpha and beta values to your left,
 look at how the
-distribution changes and change your lambda grid values accordingly. ",
+distribution changes and change your lambda grid values accordingly. Again, we are using the 
+           plot_gamma_poisson function to plot out our initial model.",
            div(
              plotOutput("grid_p1"),
              style = "padding-right: 5%; padding-left: 5%"),
