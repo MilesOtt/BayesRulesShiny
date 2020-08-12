@@ -375,7 +375,15 @@ different alpha and beta
            div(
              plotOutput(
                "balance_bayesian"),
-               style = "padding-right: 10%; padding-left: 10%"),
+               style = "padding-right: 10%; padding-left: 10%")
+           ,
+           
+           div(
+             "This 
+             Shiny app uses the plot_beta_binomial function from the  Bayes Rules! R-package. Be sure to 
+             load it on your R-studio and try it out! ",
+             style = "padding-right: 5%; padding-left: 5%")
+           ,
            div(
              br(),
              br(),
@@ -420,8 +428,7 @@ For default, we are using values
            div(
              "This 
              Shiny app uses the plot_gamma_poisson function from the  Bayes Rules! R-package to plot these
-distributions. Be sure to 
-             load it on your own R and try it out  yourself. ",
+distributions. Try plugging in values outside of the alpha and beta values provided on your own R-studio! ",
            style = "padding-right: 5%; padding-left: 5%"
            ),
            div(
