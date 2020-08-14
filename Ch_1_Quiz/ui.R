@@ -4,6 +4,14 @@ library(shinyjs)
 
 
 ui<-fluidPage(
+  tags$head(
+    tags$style(HTML("
+                    .shiny-output-error-validation{
+                    color:#ff0000;
+                    font-weight: bold;
+                    }
+                    "))
+  ),
   navbarPage("Bayes Rules!",
              tabPanel("About",
                         h2("Welcome to Bayes Rules! Interactive Exercises "),
@@ -30,13 +38,37 @@ ui<-fluidPage(
                              div(
                                p("Bayes Rules! is a textbook designed for students interested in learning about
                                Bayesian statistics at the undergraduate and graduate level.
-                               ")
+                               "))
+                             , 
+                               div(
+                                 h5("Mine Dogucu"),
+                            
+                                 p("is an Assistant Professor of Teaching in the Department of Statistics at University of California Irvine. She spends majority of her time thinking about what to teach, how to teach it, and what tools to use while teaching. She likes intersectional feminism, cats, and R Ladies. She tweets about statistics and data science education on Twitter (twitter.com/MineDogucu).")
+                                 
+                  
+                               ),
+                               div(
+                                 h5("Alicia Johnson"),
+                                 
+                                 p("is an Associate Professor of Statistics at Macalester College in Saint Paul, Minnesota. She enjoys exploring and connecting students to Bayesian analysis, computational statistics, and the potential of statistics/data science in contributing to a more equitable world. She’s considered tweeting about statistics, furniture building, and her friends’ pets.")
+                               ),
+                               div(
+                                 h5("Miles Ott"), 
+                            
+                                 p("is an Assistant Professor in the Statistical and Data Sciences Program at Smith College in Northampton, Massachusetts. He is interested in biostatistics, LGBTQ+ health research, analysis of social network data, and statistics/data science education. He blogs at milesott.com and tweets about statistics, gardening, and his dogs on Twitter (twitter.com/Miles_Ott).")
+                               ),
+                               div(
+                                 h5("Creator of this page: Elaona Lemoto"),
+                                 p("is a Smith College graduate continuing her studies in Statistics and Mathematics at Smith College 
+                                   through their Math Post-Baccaulaurete Program. She is interested in statistcs and learning more about and
+                                   data obtation and protection. She loves learning about the impact of data on margenalized groups, trying new food,
+                                   and reading tweets from the authors above!")
                              )
-                    )))
-             ,
+                    ))),
+             
              navbarMenu("Exercises",
                         #Chapter 1 Quiz
-                        tabPanel("Chapter 1 Quiz",
+                        tabPanel("Chapter 1: Quiz",
                                  titlePanel("What type of Statistician are you?"),
                                  mainPanel(
 p("Take this quiz to see whether you share more frequentist ideas,
@@ -86,17 +118,16 @@ tabPanel("Chapter 2: Posterior",
          titlePanel(
            h1("Chapter 2.1.5: Posterior Simulation with Article Verification", align = "center")
          ),
-         # Sidebar to demonstrate various slider options ----
          sidebarPanel(
            "The slider changes the number of random samples we take of articles overall.",
 
-           sliderInput("c2num", "Number of Random Samples", value=5000, min=1, max=10000),
+           sliderInput("c2num", "Number of Random Samples", value=50, min=1, max=500),
 
-           "Below, you can alter the prior probabilities for type of articles that have an exclamation point
+           "Our prior is that 40% articles are fake and 60% of our articles are real. Now 
+let's talk about what's in our data. Below, you can alter the data observations for type of articles that have an exclamation point
            in their title. Again, the default prior probabilities as they are in the book for articles that are fake and that have an
            exclamation point is 28% and 2% of real news articles use exclamation points. Therefore, the values need to remain
            between 0 and 1.",
-           #Change wording to reference book -  We're using the example from the book.
 
 
            numericInput("c2p1", "P(Exclamation Point | Fake Article ) ", value=0.28,min=0,max=1),
@@ -120,7 +151,7 @@ tabPanel("Chapter 2: Posterior",
                     their weighted probabilities. Throughout this exercise, you will look
                     at the different distributions and below as you change the number
                     or random samples "),
-             #We're going to keep the prior probabilities fixed
+      
              #This is what we observed in the data
              style = "padding-right: 5%; padding-left: 5%"
              ),
@@ -137,8 +168,7 @@ tabPanel("Chapter 2: Posterior",
              plotOutput('plot'),
              style = "padding-right: 10%; padding-left: 10%"),
            div(
-             #What is the likelihood of exclamation point given fake news articles and
-             #what is the prob, of the vice versa
+           
 
              p("Now in our analysis of real and fake articles, we created a likelihood
                variable tying together exclamation point usage and types of articles.
@@ -171,6 +201,8 @@ tabPanel("Chapter 2: Posterior",
            p("This application was made by Elaona Lemoto in
              supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
              is a textbook for undergarduates learning Bayesian statistics. "))
+         
+         #Change Posterior Name 
            ),
 #Chapter 3 Beta Model
 tabPanel("Chapter 3: Beta Model",
@@ -178,14 +210,13 @@ tabPanel("Chapter 3: Beta Model",
          titlePanel(
            h1("Chapter 3: Getting to Know the Beta Model", align = "center")
          ),
-         # Sidebar to demonstrate various slider options ----
 
          sidebarPanel(
            "To start, we need to tune the Beta prior which includes two parameters,
            alpha and beta. Choose alpha and beta values from below and see how that alters
            prior distribution.",
-           radioButtons("alpha", "Alpha", choices=c(1,3, 5, 7,20)),
-           radioButtons("beta", "Beta", choices=c(1, 3, 5, 7, 20)),
+           radioButtons("alpha", "Alpha", choices=c(0.1, 0.3,1,3, 5, 7,20)),
+           radioButtons("beta", "Beta", choices=c(0.1, 0.3,1, 3, 5, 7, 20)),
            "Below, you can choose whether to see the mean and mode on the graph.
            Before checking, try and see whether you can place it yourself!",
 
@@ -207,12 +238,6 @@ tabPanel("Chapter 3: Beta Model",
              plotOutput('plot_b'),
              style = "padding-right: 10%; padding-left: 10%"),
            div(
-             "This 
-             Shiny app uses the plot_beta function from the  Bayes Rules! R-package. Be sure to 
-             load it on your own R and try it yourself. ",
-             style = "padding-right: 5%; padding-left: 5%"
-           ),
-           div(
              br(),
              br(),
              p("This application was made by Elaona Lemoto in
@@ -221,13 +246,13 @@ tabPanel("Chapter 3: Beta Model",
              style = "padding-right: 5%; padding-left: 5%")
            )),
 #Chapter 3 Beta Binomial
+
 tabPanel("Chapter 3: Beta Binomial Model",
          useShinyjs(),
          titlePanel(
            h1("Chapter 3: The Beta-Binomial Bayesian Model of Michelle's Presidential
               Campaign", align = "center")
            ),
-         # Sidebar to demonstrate various slider options ----
 
          sidebarPanel(
            "The Alpha and Beta choices below are the parameters for the prior distribution. They
@@ -243,7 +268,6 @@ tabPanel("Chapter 3: Beta Binomial Model",
            sliderInput("c3n", "Number of Respondents to the Poll", value=50, min=1, max=100),
            sliderInput("c3x", "Number of Respondents in Support of Michelle", value=30, min=1, max=100),
            submitButton("Submit"),
-           #sliderInput("pi", "Pi", value=0, min=0, max=1),
            style = "position:fixed;width:inherit;"),
 
 
@@ -254,11 +278,12 @@ tabPanel("Chapter 3: Beta Binomial Model",
                     in the next election and won the Iowa caucus. In recent developments, we
                     learned that she secured her political party's nomination and as campaign manager, you want
                     to conduct more polls in order to gain more insight on voters and prepare for election season.
-                    Play around with the inputs to your right and see how prior data, number
+                    Play around with the inputs to your right and see how the prior distribution, number
                     of respondents to the polls,
                     and number of number of respondents in support of Michelle, alters the
                     perceived support for Michelle's candidacy in the upcoming election.
                     "),
+
              style = "padding-right: 5%; padding-left: 5%"
              ),
            div(
@@ -289,17 +314,17 @@ tabPanel("Chapter 4: Sequential Bayesian Analysis",
          ),
            sidebarPanel(
              "Here you can change the inputs for the models to our right. Let's start by choosing an alpha
-             and beta value for our first beta binomial model. Along with choosing the alpha and beta 
-             values for the fist model, choose a number of trials and successes. ",
-             radioButtons("ch4_alpha", "Alpha", choices=c(1, 2,10 )),
-             radioButtons("ch4_beta", "Beta", choices=c(1,2,10)),
+             and beta value for our beta prior model. Along with choosing the alpha and beta 
+             values for the prior model, specify your data for the three days ",
+             radioButtons("ch4_alpha", "Alpha", choices=c(2, 1,10 )),
+             radioButtons("ch4_beta", "Beta", choices=c(2,1,10)),
              sliderInput("ch4_x1", "Number of Successes for Day 1", value=5, min=1, max=10),
              sliderInput("ch4_n1", "Number of Trials for Day 1", value=6, min=1, max=10),
              
              "For day 2, choose a new number of trials and successes to
              show our updated beta binomial model.",
-             sliderInput("ch4_x2", "Number of Successes for Day 2", value=5, min=1, max=20),
-             sliderInput("ch4_n2", "Number of Trials for Day 2", value=6, min=1, max=20),
+             sliderInput("ch4_x2", "Number of Successes for Day 2", value=5, min=1, max=10),
+             sliderInput("ch4_n2", "Number of Trials for Day 2", value=6, min=1, max=10),
              
              "This is the last day of data collection. Choose the last number of trials and successes.",
              
@@ -312,7 +337,7 @@ tabPanel("Chapter 4: Sequential Bayesian Analysis",
                with more and more data, we're able to learn more about our parameter in
 question. Below is our first graph showing our beta binomial model. Play around with the alpha and
                beta buttons as well as trial and successes data to your left to see how it alters the
-               distribution. Just like our last section, Chapter 3: Beta Binomial Model, we are using the plot_beta_binomrial 
+               distribution. Just like our last section, Chapter 3: Beta Binomial Model, we are using the plot_beta_binomial 
                function from our R-package to plot these models.",
                style = "padding-right: 5%; padding-left: 5%"
              ),
@@ -356,9 +381,9 @@ tabPanel("Chapter 4: Balancing Bayesian Models",
               ")
          ),
          sidebarPanel(
-           "Below, choose a sample size and an alpha and beta value. Recall that the proportion 
-           of success is fixed at 60%!",
-           radioButtons("balance_samplen", "Sample Size", choices=c(5, 10, 15, 20, 100)),
+           "Below, choose a sample size and an alpha and beta value. The proportion 
+           of successes in our data is fixed at 60%!",
+           radioButtons("balance_samplen", "Sample Size", choices=c(5, 10, 15, 20)),
            sliderInput("balance_alpha", "Alpha", value=14, min=0.01, max=100),
            sliderInput("balance_beta", "Beta", value=1, min=0.01, max=100), 
            submitButton("Submit")
@@ -370,8 +395,10 @@ tabPanel("Chapter 4: Balancing Bayesian Models",
 posterior distribution is to be a balance between the prior and the likelihood.
            For this exercise, the propportion of success is at 60%. You can choose different sample sizes and 
 different alpha and beta
-           values. As the sample sizes change, how does it change the balance between the prior
-           and the likelihood? ",
+           values. ",
+           br("As the sample sizes change, how does it change the balance between the prior
+           and the likelihood? ")
+,
            div(
              plotOutput(
                "balance_bayesian"),
@@ -412,12 +439,9 @@ tabPanel("Chapter 5: Introduction to the Gamma-Poisson Model",
            sliderInput("poi_xn", "Sum of our xi's", value=11, min=0, max=100),
            submitButton("Submit")),
          mainPanel(
-           "In Chapter 5.2, we talk about the Gamma-Poisson Conjugacy Family. If you
+           "In Chapter 5.2, we talk about the Gamma-Poisson Conjugate Family. If you
            recall, this conjugate family has a lambda parameter that uses a Gamma prior
-           and a Poisson likelihood. In other words, the posterior distribution for 
-           this conjugate has hyperparameters depending on the prior and the likelihood. 
-           Since the Gamma-Poisson requires a Gamma prior and Poisson likelihood, use the 
-inputs to your left to play around with the model.
+           and a Poisson likelihood.
 For default, we are using values
            from our fraud risk calls example in section 2, but change the values yourself
            and see how that alters our distribution. ",
@@ -446,14 +470,14 @@ tabPanel("Chapter 5: Introduction to the Normal-Normal Model",
            h1("Chapter 5: The Normal-Normal Conjugate Family")
          ),
          sidebarPanel(
-           "Choose a mean and a standard deviation below for our Normal prior.",
-           radioButtons("nmean", "Normal Mean", choices=c(3.25,2, 3)), 
-           radioButtons("nsd", "Normal Prior Standard Deviation", choices=c(0.5, 1, 4)),
+           "Choose a prior mean and a prior standard deviation below for our Normal prior.",
+           radioButtons("nmean", "Prior Mean", choices=c(3.25,2, 3)), 
+           radioButtons("nsd", "Prior Standard Deviation", choices=c(0.5, 1, 4)),
            
            "Now that you've chosen values for our Normal prior, we need to choose values for
            our Normal likelihood. In this case, we need a sample mean and a sample size.",
-           sliderInput("nsample_mean", "Normal Sample Mean", value = 3, min=0, max=10),
-           sliderInput("nsample_n","Normal Sample Size", value = 1,min=1, max=100),
+           sliderInput("nsample_mean", "Sample Mean", value = 3, min=0, max=10),
+           sliderInput("nsample_n","Sample Size", value = 1,min=1, max=100),
            sliderInput("npop_sd","Population Standard Deviation (Assumingly Known)", value = 0.4, min=0.01, 
                        max=10),
            submitButton("Submit")
@@ -494,14 +518,15 @@ tabPanel("Chapter 6: Grid Approximation",
            have a number of trials to choose from. In this case, we are keeping n fixed at 1.",
            radioButtons("g6_alpha", "Alpha", choices=c(3, 6, 7, 8)),
            radioButtons("g6_beta", "Beta", choices=c(1, 3, 6, 9)),
-           sliderInput("g6_lambda", "Rate of Success", value=5, min=0, max=50),
-           "Given how your Gamma prior and Poisson Likelihood distributions appear, change your grid values!",
+           sliderInput("g6_lambda", "Number of Events", value=5, min=0, max=50),
+           "Given how your Gamma prior and Poisson Likelihood distributions appear, change your this grid value 
+           to alter where the posterior approximation plot ends.",
            sliderInput("g6_grid", "Grid values ", value=15, min=0, max=50),
            submitButton("Submit")
          ),
          mainPanel(
            "In section 6.1.2, we begin to apply our grid approximation knowledge to a
-           Gamma-Poisson Model. For this exercise, we are going to try approximate different posterior's given different prior and likelihood values.
+           Gamma-Poisson Model. For this exercise, we are going to try approximating different posterior's given different prior and likelihood values.
 In order to utilize our approximation tool, we need to establish
            more information about our model. Recall for a Gamma-Poisson model, you need a Gamma prior
 and Poisson likelihood.
@@ -529,8 +554,6 @@ distribution changes and change your lambda grid values accordingly. Again, we a
              plotOutput("grid_p2"),
              style = "padding-right: 10%; padding-left: 10%"),
 
-
-
            div(
              br(),
              br(),
@@ -544,19 +567,14 @@ tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
            h1("Chapter 7: Tuning the Metropolis-Hastings Algorithm")
          ),
          sidebarPanel(
-           "Using the slider below, change the standard deviation of our model. ",
+           "Using the slider below, change the standard deviation of our proposal model.
            
-           #Try really small values and really big values and try values to see
-           #try to find an app. sd (use wording from the book)
-           #We're using a normal proposal model.
-           # Explicty where our model we're using
-           #Have priors be different (Changes the alpha and beta for current)
-           #Change the data (change 0 do it  for the depois)
-           
-           #We're doing doing a Gamma-Poisson. Prior and data used. 
+           Again, we are using a Gamma-Poisson model witha Gamma prior (2,3) and Data 
+           lambda =4.",
            sliderInput("mcmc_sd", "Standard Deviation", value = 0.3, min=0, max=10, step=0.0001),
            submitButton("Submit")
          ), 
+         
          
          mainPanel(
            "In Chapter 6, we began to talk about Markov chain tours for simulating and 
@@ -564,10 +582,12 @@ approximating a posterior
            distribution. The Metropolis-Hastings algorithm R code in section 7.2 works at formulating
            that chain step-by-step without rStan which you can follow with the in-text R code. 
 For the purpose 
-           of this exercise, you will be changing the size of the standard deviation of our chosen 
-model and 
-           evaluating it's impact on our Markov trace plots. What do you notice about using a 
-           really small standard deviation? What about a large one?",
+           of this exercise, our proposal model will follow a  Gamma-Poisson distribution. Our Gamma prior has an alpha of 2 and a beta of 3. Let's also 
+set our rate of success for our Poisson likelihood at 4. Recall that we need a current value for our algorithm. In this case we set it as 1. 
+What you will do is alter the size of the standard deviation evaluating it's impact on our Markov trace plots.",
+           strong(" What do you notice about using a 
+           really small standard deviation? What about a large one?"),
+          
            div(
              plotOutput("mcmc_trace_plot"),
              style = "padding-right: 10%; padding-left: 10%"),

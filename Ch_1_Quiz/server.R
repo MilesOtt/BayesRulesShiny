@@ -169,7 +169,9 @@ plot_beta_binomial_day1 <- function (alpha,
                                 n = NULL,
                                 prior = TRUE,
                                 likelihood = TRUE,
-                                posterior = TRUE){
+                                posterior = TRUE,
+                                title_name=TRUE
+                                ){
   if (is.null(x) | is.null(n))
     warning("To visualize the posterior,
             specify data x and n")
@@ -247,6 +249,13 @@ plot_beta_binomial_day1 <- function (alpha,
                     aes(fill = "posterior"))
     
   }
+
+if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
+  g <- g +
+    labs(title=paste("First Day Beta Prior: \n alpha = ",alpha, "beta = ", beta, 
+                     ", and Data: x= ", x, "n = ",n ))
+}
+  
   g
   
 } # end of function`
@@ -341,7 +350,8 @@ plot_beta_binomial_day2 <- function (alpha,
   }
   if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
     g <- g +
-     labs(title=paste("Second Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta))
+     labs(title=paste("Second Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta,
+                       ", and Data: x= ", x, "n = ",n ))
     
     
   }
@@ -440,9 +450,9 @@ plot_beta_binomial_day3 <- function (alpha,
   }
   
   if (!is.null(x) & !is.null(n) & posterior == TRUE & title_name==TRUE) {
-    x="title_name"
     g <- g +
-      labs(title=paste("Third Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta))
+      labs(title=paste("Third Day Updated Beta Prior: \n alpha = ",alpha, "beta = ", beta, 
+                       ", and Data: x= ", x, "n = ",n ))
     
     
   }
@@ -674,8 +684,8 @@ one_mh_iteration <- function(sigma, current){
 
   if(proposal < 0) {alpha <- 0}
   else {
-    proposal_plaus <- dgamma(proposal,1,1) * dpois(0,proposal) 
-    current_plaus <- dgamma(current,1,1) * dpois(0,current)
+    proposal_plaus <- dgamma(proposal,2,3) * dpois(4,proposal) 
+    current_plaus <- dgamma(current,2,3) * dpois(4,current)
     alpha <- min(1, proposal_plaus / current_plaus)
     }
   next_stop <- sample(c(proposal, current), 
@@ -828,8 +838,8 @@ output$plot2<-renderPlot({
  #Chapter 3 Beta Model
 
    observeEvent(list(input$alpha, input$beta, input$x, input$n, input$mean, input$mode),{
-     a=as.integer(input$alpha)
-     b=as.integer(input$beta)
+     a=as.numeric(input$alpha)
+     b=as.numeric(input$beta)
 
 
      output$plot_b<-renderPlot({
@@ -863,6 +873,8 @@ output$plot2<-renderPlot({
          plot_beta_binomial(c3a,c3b,warn_ch3p1(),warn_ch3p2(), "The Beta Binomial Model of Michelle's Campaign" )
        })
      })
+   
+   #Change the warning font and color
      
      
      #Chapter 4 Sequential Bayesian Analysis
@@ -920,6 +932,7 @@ output$plot2<-renderPlot({
        ch4_alpha=as.integer(input$ch4_alpha)
        ch4_beta=as.integer(input$ch4_beta)
        plot_beta_binomial_day1(ch4_alpha, ch4_beta, warn_ch4p1(), warn_ch4p2())
+       
        })
        
        output$plot_ch42<-renderPlot({
@@ -940,12 +953,15 @@ output$plot2<-renderPlot({
        })
        })
      
+
+     
+     
   #Chapter 4: Balancing Bayesian Models
      
      observeEvent(list(input$balance_samplen, input$balance_alpha, input$balance_beta
                        ),{
        output$balance_bayesian<-renderPlot({
-         sample_n=as.integer(input$balance_samplen)
+         sample_n=as.numeric(input$balance_samplen)
          x=0.6*sample_n
          plot_beta_binomial(input$balance_alpha, input$balance_beta, x, sample_n,"Our Beta Binomial Model")
        })
@@ -958,7 +974,7 @@ output$plot2<-renderPlot({
          beta<-as.numeric(input$gamma_beta)
          shape<-alpha+input$poi_xn
          rate<-beta+input$poi_n
-         plot_gamma_poisson(shape, rate, input$poi_n, input$poi_xn, "Our Gamma-Poisson Model")
+         plot_gamma_poisson(shape, rate, input$poi_xn, input$poi_n, "Our Gamma-Poisson Model")
        })
        })
      
@@ -972,6 +988,7 @@ output$plot2<-renderPlot({
             sd<-as.numeric(input$nsd)
             plot_normal_normal(mean, sd, input$nsample_mean, input$nsample_n,
                                input$npop_sd, "Our Normal-Normal Model")
+          
           })
        
 
@@ -1017,7 +1034,7 @@ output$plot2<-renderPlot({
                 plot.title = element_text(size=22),
                 legend.text = element_text(size=16))+
           labs(title="Posterior Estimation Using Grid Approximation")
-
+#The lower plot needs some work!
 
 
 
@@ -1029,16 +1046,10 @@ output$plot2<-renderPlot({
     
      observeEvent( input$mcmc_sd,{
        
-       
+       #Change the values for this example and share how these values are different
        output$mcmc_trace_plot<-renderPlot({
-
-         #start at unreasonable value
+         current<-1
          set.seed(4)
-         proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
-         proposal_plaus <- dgamma(proposal,1,2) * dpois(0,proposal)
-         current_plaus <- dgamma(current,1,2) * dpois(0,current)
-         alpha <- min(1, proposal_plaus / current_plaus)
-         next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
          
        mh_simulation_1 <- mh_tour(N = 1000, sigma = input$mcmc_sd)
        
@@ -1047,15 +1058,8 @@ output$plot2<-renderPlot({
        })
        
       output$mcmc_iteration<-renderPlot({
-        
-
+        current<-1
         set.seed(4)
-        proposal <- rnorm(1, mean = current, sd = input$mcmc_sd)
-        proposal_plaus <- dgamma(proposal,1,2) * dpois(0,proposal)
-        current_plaus <- dgamma(current,1,2) * dpois(0,current)
-        alpha <- min(1, proposal_plaus / current_plaus)
-        next_stop <- sample(c(proposal, current), size = 1, prob = c(alpha, 1-alpha))
-        
         mh_simulation_1 <- mh_tour(N = 1000, sigma = input$mcmc_sd)
        
        ggplot(mh_simulation_1, aes(x = lambda)) + geom_histogram(color = "white")+
