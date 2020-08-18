@@ -27,7 +27,15 @@ ui<-fluidPage(
                            an app, follow the in-app instructions to learn more about that topic. Certain 
                           chapters include <em>Bayes Rules!</em> R-package functions, so be sure to load our R-package
                           to use it on your own. This is a work in progress!"))), 
-                        style = "padding-right: 5%; padding-left: 5%"),
+                        style = "padding-right: 5%; padding-left: 5%")
+                        ,
+                        div(
+                          h5(div(HTML("<b>Elaona Lemoto</b> (Creator of this page and apps)"))),
+                          p("is a Smith College graduate continuing her studies in Statistics and Mathematics at Smith College 
+                                   through their Math Post-Baccalaureate Program. She is interested in statistcs and learning more about
+                                   data protection. She loves learning about the impact of data on marginalized groups, trying new food,
+                                   and reading tweets from the authors above!")
+                        ),
 
                         h5("Built with",
                            img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "60px"),
@@ -57,14 +65,7 @@ ui<-fluidPage(
                                  h5(div(HTML("<b>Miles Ott</b>"))), 
                             
                                  p("is an Assistant Professor in the Statistical and Data Sciences Program at Smith College in Northampton, Massachusetts. He is interested in biostatistics, LGBTQ+ health research, analysis of social network data, and statistics/data science education. He blogs at milesott.com and tweets about statistics, gardening, and his dogs on Twitter (twitter.com/Miles_Ott).")
-                               ),
-                               div(
-                                 h5(div(HTML("<b>Elaona Lemoto</b> (Creator of this page and apps)"))),
-                                 p("is a Smith College graduate continuing her studies in Statistics and Mathematics at Smith College 
-                                   through their Math Post-Baccalaureate Program. She is interested in statistcs and learning more about
-                                   data protection. She loves learning about the impact of data on marginalized groups, trying new food,
-                                   and reading tweets from the authors above!")
-                             )
+                               )
                     ))),
              
              navbarMenu("Exercises",
