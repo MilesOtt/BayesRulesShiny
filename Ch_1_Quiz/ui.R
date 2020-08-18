@@ -12,56 +12,57 @@ ui<-fluidPage(
                     }
                     "))
   ),
-  navbarPage("Bayes Rules!",
+  navbarPage(div(HTML("<em>Bayes Rules!</em>")),
              tabPanel("About",
-                        h2("Welcome to Bayes Rules! Interactive Exercises "),
+                        h2(div(HTML("Welcome to <em>Bayes Rules!</em> Interactive Exercises "))),
                       fluidRow(
                         column(6,
-                               h4("Aboout This Page"),
+                               h4(div(HTML("<b>About <em>Bayes Rules!</em> Shiny Exercises</b>"))),
                                div(
-                        p("Here you'll have exercises that supplement certain sections of Bayes Rules!
-                           to further assist you in your journey of learning Bayesian statistics. These exercises can be 
-                           found in the top bar titled, 'Exercises'. From there you will have a drop-down list of 
+                        p(div(HTML("The goal of these Shiny apps is to 
+                           to assist you in your journey of learning Bayesian statistics with <em>Bayes Rules!</em> by
+                           allowing you to try out different ideas from each chapter.
+                           These exercises can be found in the top bar titled, 'Exercises'. From there you will have a drop-down list of 
                            different chapters and sections that we've created for you. After choosing
                            an app, follow the in-app instructions to learn more about that topic. Certain 
-                          chapters include Bayes Rule! R-package functions, so be sure to load our R-package
-                          to use it on your own."), 
+                          chapters include <em>Bayes Rules!</em> R-package functions, so be sure to load our R-package
+                          to use it on your own. This is a work in progress!"))), 
                         style = "padding-right: 5%; padding-left: 5%"),
 
                         h5("Built with",
-                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "30px"),
+                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/04/shiny.png", height = "60px"),
                            "by",
-                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/07/RStudio-Logo-Blue-Gray.png", height = "30px"),
+                           img(src = "https://www.rstudio.com/wp-content/uploads/2014/07/RStudio-Logo-Blue-Gray.png", height = "60px"),
                            ".")),
                       column(6,
-                             h4("About the Authors"),
+                             h4(div(HTML("<b>About the Authors</b>"))),
                              div(
-                               p("Bayes Rules! is a textbook designed for students interested in learning about
+                               p(div(HTML("<em>Bayes Rules!</em> is a textbook designed for students interested in learning about
                                Bayesian statistics at the undergraduate and graduate level.
-                               "))
+                               "))))
                              , 
                                div(
-                                 h5("Mine Dogucu"),
+                                 h5(div(HTML("<b>Mine Dogucu</b>"))),
                             
                                  p("is an Assistant Professor of Teaching in the Department of Statistics at University of California Irvine. She spends majority of her time thinking about what to teach, how to teach it, and what tools to use while teaching. She likes intersectional feminism, cats, and R Ladies. She tweets about statistics and data science education on Twitter (twitter.com/MineDogucu).")
                                  
                   
                                ),
                                div(
-                                 h5("Alicia Johnson"),
+                                 h5(div(HTML("<b>Alicia Johnson</b>"))),
                                  
                                  p("is an Associate Professor of Statistics at Macalester College in Saint Paul, Minnesota. She enjoys exploring and connecting students to Bayesian analysis, computational statistics, and the potential of statistics/data science in contributing to a more equitable world. She’s considered tweeting about statistics, furniture building, and her friends’ pets.")
                                ),
                                div(
-                                 h5("Miles Ott"), 
+                                 h5(div(HTML("<b>Miles Ott</b>"))), 
                             
                                  p("is an Assistant Professor in the Statistical and Data Sciences Program at Smith College in Northampton, Massachusetts. He is interested in biostatistics, LGBTQ+ health research, analysis of social network data, and statistics/data science education. He blogs at milesott.com and tweets about statistics, gardening, and his dogs on Twitter (twitter.com/Miles_Ott).")
                                ),
                                div(
-                                 h5("Creator of this page: Elaona Lemoto"),
+                                 h5(div(HTML("<b>Elaona Lemoto</b> (Creator of this page and apps)"))),
                                  p("is a Smith College graduate continuing her studies in Statistics and Mathematics at Smith College 
-                                   through their Math Post-Baccaulaurete Program. She is interested in statistcs and learning more about and
-                                   data obtation and protection. She loves learning about the impact of data on margenalized groups, trying new food,
+                                   through their Math Post-Baccalaureate Program. She is interested in statistcs and learning more about
+                                   data protection. She loves learning about the impact of data on marginalized groups, trying new food,
                                    and reading tweets from the authors above!")
                              )
                     ))),
@@ -71,8 +72,8 @@ ui<-fluidPage(
                         tabPanel("Chapter 1: Quiz",
                                  titlePanel("What type of Statistician are you?"),
                                  mainPanel(
-p("Take this quiz to see whether you share more frequentist ideas,
-bayesian ideas, or both!"),
+p("Take this quiz to see whether you side more with frequentist ideas,
+Bayesian ideas, or a mix of both!"),
 br()),
 fluidRow(
     column(6,
@@ -80,19 +81,19 @@ fluidRow(
                How do you interpret this probability?",choices=list("If I flip this coin over and over,
                                                                     roughly 50% will be Heads."=1, "Heads and Tails are equally plausible."=3,
                                                                     "Both a and b make sense."=2),selected=character(0)),
-             radioButtons("q2", "A meterologist warns that 'there's a 0.1 probability
+             radioButtons("q2", "A meterologist warns that 'there's a 0.5 probability
                           of rain today.' How do you interpret this probability?",
-                          choices =list("If we observe today over and over, it will rain on roughly 10% of todays.
+                          choices =list("If we observe today over and over, it will rain on roughly 50% of todays.
                                         "=1,"It's equally likely to rain or not rain."=3,
                                         "The meteorologist's calculation is wrong. It will either rain or not rain,
                                         thus the probability of rain can only be 0 or 1"=1),selected=character(0))),
     column(6,
             radioButtons("q3", "Consider two claims. (1) Zuofu claims that he
-can predict the out- come of a coin flip. To test his claim, you flip a
+can predict the outcome of a coin flip. To test his claim, you flip a
                            fair coin 10 times and he correctly predicts all 10! (2) Kavya claims that
-                           she can dis- tinguish Dunkin’ Donuts1 coffee from Starbucks coffee. To test
-                           her claim, you give her 10 coffee samples and she correctly identifies the
-                           origin of each! In light of these experiments, what do you conclude? ",
+                           she can distinguish real sugar in her tea from artificial sweetener. To test
+                           her claim, you give her 10 tea samples and she correctly identifies which uses
+                           real sugar and which uses artifical sweeteners! In light of these experiments, what do you conclude? ",
                            choices = list("You’re more confident in Kavya’s claim than Zuofu’s claim."
                                           =3,"The evidence supporting Zuofu’s claim is just as strong as the
                                           evidence supporting Kavya’s claim."=1),selected=character(0)),
@@ -109,9 +110,9 @@ verbatimTextOutput("answer"),
   br(),
   br(),
   br(),
-  p("This application was made by Elaona Lemoto in
-    supplement to Bayes Rules! by Alicia Johnson, Mine Dogucu, and Miles Ott. Bayes Rules!
-      is a textbook for undergarduates learning Bayesian statistics. ")),
+  p(div(HTML("This application was made by Elaona Lemoto in
+    supplement to <em>Bayes Rules!</em> by Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+      is a textbook for undergraduates learning Bayesian statistics. ")))),
 
 #Chapter 2, Posterior
 tabPanel("Chapter 2: Posterior",
@@ -198,9 +199,9 @@ let's talk about what's in our data. Below, you can alter the data observations 
            br(),
            br(),
            br(),
-           p("This application was made by Elaona Lemoto in
-             supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-             is a textbook for undergarduates learning Bayesian statistics. "))
+           p(div(HTML("This application was made by Elaona Lemoto in
+             supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+             is a textbook for undergraduates learning Bayesian statistics. "))))
          
          #Change Posterior Name 
            ),
@@ -240,9 +241,9 @@ tabPanel("Chapter 3: Beta Model",
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. "))),
              style = "padding-right: 5%; padding-left: 5%")
            )),
 #Chapter 3 Beta Binomial
@@ -299,9 +300,9 @@ tabPanel("Chapter 3: Beta Binomial Model",
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. "))),
              style = "padding-right: 5%; padding-left: 5%")
          )),
 
@@ -366,9 +367,9 @@ question. Below is our first graph showing our beta binomial model. Play around 
          div(
            br(),
            br(),
-           p("This application was made by Elaona Lemoto in
-             supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-             is a textbook for undergarduates learning Bayesian statistics. "),
+           p(div(HTML("This application was made by Elaona Lemoto in
+             supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+             is a textbook for undergraduates learning Bayesian statistics. "))),
            style = "padding-right: 5%; padding-left: 5%")
              )
          ),
@@ -414,9 +415,9 @@ different alpha and beta
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. "))),
              style = "padding-right: 5%; padding-left: 5%")
            
          )
@@ -458,9 +459,9 @@ distributions. Try plugging in values outside of the alpha and beta values provi
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. "))),
              style = "padding-right: 5%; padding-left: 5%"))),
 
 #Chapter 5: Normal Normal
@@ -503,9 +504,9 @@ of these types of families by learning more about the
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. "),
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. "))),
              style = "padding-right: 5%; padding-left: 5%")
            
          )),
@@ -557,9 +558,9 @@ distribution changes and change your lambda grid values accordingly. Again, we a
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. ")
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. ")))
 
          ))),
 tabPanel("Chapter 7: Metropolis-Hastings Algorithm",
@@ -598,14 +599,14 @@ What you will do is alter the size of the standard deviation evaluating it's imp
            div(
              br(),
              br(),
-             p("This application was made by Elaona Lemoto in
-               supplement to Bayes Rules! by  Mine Dogucu, Alicia Johnson, and Miles Ott. Bayes Rules!
-               is a textbook for undergarduates learning Bayesian statistics. ")
+             p(div(HTML("This application was made by Elaona Lemoto in
+               supplement to <em>Bayes Rules!</em> by  Mine Dogucu, Alicia Johnson, and Miles Ott. <em>Bayes Rules!</em>
+               is a textbook for undergraduates learning Bayesian statistics. ")))
 )))
-#not looking for too small and not too big proprosals 
+#not looking for too small and not too big proposals 
 
 #read the chapters and run the code
-#Shiny app to make would be one o the ex. but changidng how bing the standard deviation and 
+#Shiny app to make would be one o the ex. but changing the standard deviation and 
 #how it changes to trace plot
 #independent sampling theorem
 #make the metropiplolish hastinsgs ex. and have the options to change the sd for the
