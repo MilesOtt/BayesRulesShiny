@@ -4,3 +4,5 @@ This project is aimed at providing shiny applications in conjunction with the te
 
 Created by Elaona Lemoto and Miles Ott
 
+Check out the apps page here: https://bayesrules.shinyapps.io/Interactive/
+
